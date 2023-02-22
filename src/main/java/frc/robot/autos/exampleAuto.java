@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -29,11 +30,11 @@ public class exampleAuto extends SequentialCommandGroup {
         Trajectory exampleTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(10, 1), new Translation2d(11, 0)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(12, -1, new Rotation2d(0)),
+                List.of(new Pose2d(new Translation2d(-5, 0), new Rotation2d(Math.toRadians(-90))), 
+                new Pose2d(new Translation2d(12, -1), new Rotation2d(0)), 
+                new Pose2d(new Translation2d(-1, 1), new Rotation2d(180)),
+                new Pose2d()
+                ), 
                 config);
 
         var thetaController =

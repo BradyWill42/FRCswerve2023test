@@ -49,6 +49,7 @@ public class Conversions {
         return mechRPM;
     }
 
+    
     /**
      * @param RPM RPM of mechanism
      * @param gearRatio Gear Ratio between Neo and Mechanism (set to 1 for Neo RPM)

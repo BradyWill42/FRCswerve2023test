@@ -78,6 +78,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
+        s_Swerve.zeroGyro();
         return new exampleAuto(s_Swerve);
     }
 }
