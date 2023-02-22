@@ -3,6 +3,8 @@ package frc.robot.autos;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -14,11 +16,22 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
+
 public class exampleAuto extends SequentialCommandGroup {
+    private String trajectory1JSON = "paths/MoveToFirstBlock.wpilib.json";
+    private Trajectory trajectory1 = new Trajectory();
+
+    // private String trajectory2JSON = "MoveToFirstCone.wpilib.json";
+    // private Trajectory trajectory2 = new Trajectory();
+
+
     public exampleAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
@@ -30,12 +43,26 @@ public class exampleAuto extends SequentialCommandGroup {
         Trajectory exampleTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                List.of(new Pose2d(new Translation2d(-5, 0), new Rotation2d(Math.toRadians(-90))), 
-                new Pose2d(new Translation2d(12, -1), new Rotation2d(0)), 
-                new Pose2d(new Translation2d(-1, 1), new Rotation2d(180)),
-                new Pose2d()
-                ), 
+                List.of(
+                    new Pose2d(new Translation2d(0, 0), new Rotation2d(0)),
+                    new Pose2d(new Translation2d(10, 0), new Rotation2d(0))
+                    //new Pose2d(new Translation2d(0, 0), new Rotation2d(0))
+                ),
                 config);
+
+        try {
+            Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON);
+            trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
+        }
+        
+        // try {
+        //     Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(trajectory2JSON);
+        //     trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
+        // } catch (IOException ex) {
+        //     DriverStation.reportError("Unable to open trajectory: " + trajectory2JSON, ex.getStackTrace());
+        // }
 
         var thetaController =
             new ProfiledPIDController(

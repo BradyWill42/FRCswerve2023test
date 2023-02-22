@@ -49,7 +49,7 @@ public class Conversions {
         return mechRPM;
     }
 
-    
+
     /**
      * @param RPM RPM of mechanism
      * @param gearRatio Gear Ratio between Neo and Mechanism (set to 1 for Neo RPM)
@@ -92,7 +92,7 @@ public class Conversions {
      * @return Meters
      */
     public static double neoToMeters(double positionCounts, double circumference, double gearRatio){
-        return positionCounts * (circumference / (gearRatio * 2048.0));
+        return (positionCounts * (circumference / (4096.0)))/ gearRatio;
     }
 
     /**
@@ -102,6 +102,6 @@ public class Conversions {
      * @return Neo Position Counts
      */
     public static double MetersToNeo(double meters, double circumference, double gearRatio){
-        return meters / (circumference / (gearRatio * 2048.0));
+        return meters / (circumference / (4096.0 / gearRatio)) / gearRatio;
     }
 }

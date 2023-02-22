@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
@@ -135,8 +136,8 @@ private void configDriveMotor(){
     mDriveEncoder.setVelocityConversionFactor(1/Constants.Swerve.chosenModule.driveGearRatio // 1/gear ratio because the wheel spins slower than the motor.
             * Constants.Swerve.chosenModule.wheelCircumference // Multiply by the circumference to get meters per minute
             / 60); // Divide by 60 to get meters per second.
+    mDriveEncoder.setPositionConversionFactor(4096);
     mDriveEncoder.setPosition(0);
-
     mDrivePIDController.setP(Constants.Swerve.driveKP);
     mDrivePIDController.setI(Constants.Swerve.driveKI);
     mDrivePIDController.setD(Constants.Swerve.driveKD);
@@ -156,8 +157,10 @@ public Rotation2d getCanCoder(){
 }
 
 public SwerveModulePosition getPosition(){
+    SmartDashboard.putNumber("Position of Encoder", Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio));
+
     return new SwerveModulePosition(
-        Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
+        (Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio)), 
         getAngle()
     );
 }

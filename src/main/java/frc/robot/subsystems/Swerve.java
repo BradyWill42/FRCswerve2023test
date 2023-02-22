@@ -77,6 +77,7 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
+        SmartDashboard.putNumber("XPose", swerveOdometry.getPoseMeters().getX());
         return swerveOdometry.getPoseMeters();
     }
 
@@ -96,6 +97,7 @@ public class Swerve extends SubsystemBase {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : mSwerveMods){
             positions[mod.moduleNumber] = mod.getPosition();
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber, mod.getPosition().distanceMeters);
         }
         return positions;
     }
@@ -122,6 +124,8 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Robot Distance Traveled", getPose().getX());
+
         }
         SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     }

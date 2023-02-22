@@ -16,7 +16,7 @@ public final class Constants {
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSNeoSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
-            COTSNeoSwerveConstants.SDSMK3(COTSNeoSwerveConstants.driveGearRatios.SDSMK3_Standard);
+            COTSNeoSwerveConstants.SDSMK4(COTSNeoSwerveConstants.driveGearRatios.SDSMK4_L1);
 
         /* Drivetrain Constants */
         public static final double trackWidth = 0.5715; //TODO: This must be tuned to specific robot
