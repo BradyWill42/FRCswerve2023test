@@ -91,7 +91,7 @@ public class Conversions {
      * @param gearRatio Gear Ratio between Neo and Wheel
      * @return Meters
      */
-    public static double neoToMeters(double positionCounts, double circumference, double gearRatio){
+    public static double neoToMeters(double positionCounts, double circumference, double gearRatio, int motorNumber){
         return (positionCounts * (circumference / (4096.0)))/ gearRatio;
     }
 

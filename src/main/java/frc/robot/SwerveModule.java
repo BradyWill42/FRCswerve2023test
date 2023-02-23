@@ -54,6 +54,9 @@ public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
 
     /* Drive motor */
     mDriveMotor = new CANSparkMax(moduleConstants.driveMotorID, MotorType.kBrushless);
+    // if(moduleNumber == 0 ){
+    //     mDriveMotor.setInverted(true);
+    // }
     mDriveEncoder = mDriveMotor.getEncoder();
     mDrivePIDController = mDriveMotor.getPIDController();
     configDriveMotor();
@@ -107,7 +110,7 @@ private void configAngleEncoder(){
     absoluteEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
 }
 
-private void configAngleMotor() {
+public void configAngleMotor() {
     mAngleMotor.restoreFactoryDefaults();
     mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     mAngleMotor.setSecondaryCurrentLimit(Constants.Swerve.anglePeakCurrentLimit);
@@ -122,9 +125,11 @@ private void configAngleMotor() {
     mAnglePIDController.setI(Constants.Swerve.angleKI);
     mAnglePIDController.setD(Constants.Swerve.angleKD);
     mAnglePIDController.setFF(Constants.Swerve.angleKF);
+
+    mAngleMotor.burnFlash();
 }
 
-private void configDriveMotor(){       
+public void configDriveMotor(){       
     mDriveMotor.restoreFactoryDefaults();
     mDriveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
     mDriveMotor.setSecondaryCurrentLimit(Constants.Swerve.drivePeakCurrentLimit);
@@ -142,6 +147,7 @@ private void configDriveMotor(){
     mDrivePIDController.setI(Constants.Swerve.driveKI);
     mDrivePIDController.setD(Constants.Swerve.driveKD);
     mDrivePIDController.setFF(Constants.Swerve.driveKF); // Not actually used because we specify our feedforward when we set our speed.
+    mDriveMotor.burnFlash();
 
 }
 
@@ -156,11 +162,14 @@ public Rotation2d getCanCoder(){
     return Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition());
 }
 
+
 public SwerveModulePosition getPosition(){
-    SmartDashboard.putNumber("Position of Encoder", Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio));
+    for(int i = 0; i < 4; i++){
+        SmartDashboard.putNumber("Position of Encoder" + moduleNumber, Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio, moduleNumber));
+    }
 
     return new SwerveModulePosition(
-        (Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio)), 
+        Conversions.neoToMeters(mDriveEncoder.getPosition(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio, moduleNumber), 
         getAngle()
     );
 }
