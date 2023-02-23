@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -85,6 +86,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         s_Swerve.zeroGyro();
-        return new exampleAuto(s_Swerve);
+
+        return new SequentialCommandGroup(
+            new blockAuto(s_Swerve),
+            new coneAuto(s_Swerve)
+        );
+        // return new blockAuto(s_Swerve);
     }
 }

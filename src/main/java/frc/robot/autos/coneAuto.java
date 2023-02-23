@@ -25,15 +25,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 
-public class exampleAuto extends SequentialCommandGroup {
-    private String trajectory1JSON = "paths/MoveToFirstBlock.wpilib.json";
-    private Trajectory trajectory1 = new Trajectory();
+public class coneAuto extends SequentialCommandGroup {
+    private String blockTrajJSON = "paths/MoveToFirstBlock.wpilib.json";
+    private Trajectory blockTraj = new Trajectory();
 
-    // private String trajectory2JSON = "MoveToFirstCone.wpilib.json";
-    // private Trajectory trajectory2 = new Trajectory();
+    private String coneTrajJSON = "paths/MoveToFirstCone.wpilib.json";
+    private Trajectory coneTraj = new Trajectory();
 
 
-    public exampleAuto(Swerve s_Swerve){
+    public coneAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -55,27 +55,38 @@ public class exampleAuto extends SequentialCommandGroup {
         SmartDashboard.putNumber("Initial YPose", exampleTrajectory.getInitialPose().getY());
 
         try {
-            Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON);
-            trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+            Path blockPath = Filesystem.getDeployDirectory().toPath().resolve(blockTrajJSON);
+            blockTraj = TrajectoryUtil.fromPathweaverJson(blockPath);
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
+            DriverStation.reportError("Unable to open trajectory: " + blockTrajJSON, ex.getStackTrace());
         }
         
-        // try {
-        //     Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(trajectory2JSON);
-        //     trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
-        // } catch (IOException ex) {
-        //     DriverStation.reportError("Unable to open trajectory: " + trajectory2JSON, ex.getStackTrace());
-        // }
+        try {
+            Path conePath = Filesystem.getDeployDirectory().toPath().resolve(coneTrajJSON);
+            coneTraj = TrajectoryUtil.fromPathweaverJson(conePath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + coneTrajJSON, ex.getStackTrace());
+        }
 
         var thetaController =
             new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        SwerveControllerCommand swerveControllerCommand =
+        SwerveControllerCommand getConeAuto =
             new SwerveControllerCommand(
-                trajectory1,
+                coneTraj,
+                s_Swerve::getPose,
+                Constants.Swerve.swerveKinematics,
+                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+                thetaController,
+                s_Swerve::setModuleStates,
+                s_Swerve);
+
+        SwerveControllerCommand getBlockAuto =
+            new SwerveControllerCommand(
+                blockTraj,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -85,9 +96,12 @@ public class exampleAuto extends SequentialCommandGroup {
                 s_Swerve);
 
 
+
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(trajectory1.getInitialPose())),
-            swerveControllerCommand
+            // new InstantCommand(() -> s_Swerve.resetOdometry(trajectory1.getInitialPose())),
+            // getConeAuto,
+            new InstantCommand(() -> s_Swerve.resetOdometry(coneTraj.getInitialPose())),
+            getConeAuto
         );
     }
 }
