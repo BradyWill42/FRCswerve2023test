@@ -8,11 +8,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.autocommands.AutoDrive;
+import frc.robot.commands.autocommands.AutoTurn;
+import frc.robot.commands.autocommands.BalanceRobot;
 import frc.robot.subsystems.*;
 
 /**
@@ -88,10 +92,18 @@ public class RobotContainer {
         s_Swerve.zeroGyro();
 
         return new SequentialCommandGroup(
-            new Balance(s_Swerve)
-            // new blockAuto(s_Swerve),
-            // new coneAuto(s_Swerve)
+            // new AutoTurn(180, s_Swerve),
+            // new AutoDrive(-3.2, s_Swerve),
+            new BalanceRobot(s_Swerve)
         );
+
+        // return new AutoDrive(1, s_Swerve);
+
+        // return new SequentialCommandGroup(
+        //     new Balance(s_Swerve)
+        //     // new blockAuto(s_Swerve),
+        //     // new coneAuto(s_Swerve)
+        // );
         // return new blockAuto(s_Swerve);
     }
 }
