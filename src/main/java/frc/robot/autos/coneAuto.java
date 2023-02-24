@@ -5,7 +5,14 @@ import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -20,10 +27,10 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-
 
 public class coneAuto extends SequentialCommandGroup {
     private String blockTrajJSON = "paths/MoveToFirstBlock.wpilib.json";
@@ -31,6 +38,9 @@ public class coneAuto extends SequentialCommandGroup {
 
     private String coneTrajJSON = "paths/MoveToFirstCone.wpilib.json";
     private Trajectory coneTraj = new Trajectory();
+
+    private String pathPlanner1stConeJSON = "GetACone";
+    private Trajectory planner1ConeTraj = new Trajectory();
 
 
     public coneAuto(Swerve s_Swerve){
@@ -67,11 +77,41 @@ public class coneAuto extends SequentialCommandGroup {
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + coneTrajJSON, ex.getStackTrace());
         }
+           
+
+        PathPlannerTrajectory pathPlannerTest = PathPlanner.loadPath(pathPlanner1stConeJSON, new PathConstraints(4, 3));
+
+        
+
+        // try {
+        //     Path planner1stCone = Filesystem.getDeployDirectory().toPath().resolve(pathPlanner1stConeJSON);
+        //     planner1ConeTraj = TrajectoryUtil.fromPathweaverJson(conePath);
+        // } catch (IOException ex) {
+        //     DriverStation.reportError("Unable to open trajectory: " + coneTrajJSON, ex.getStackTrace());
+        // }
+        
 
         var thetaController =
             new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        SwerveAutoBuilder pathPlannerBuilder = // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
+            new SwerveAutoBuilder(
+                s_Swerve::getPose, // Pose2d supplier
+                s_Swerve::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+                Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
+                new PIDConstants(20, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+                new PIDConstants(20, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+                s_Swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
+                eventMap,
+                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                s_Swerve // The drive subsystem. Used to properly set the requirements of path following commands
+            );
+        
+
 
         SwerveControllerCommand getConeAuto =
             new SwerveControllerCommand(
@@ -83,6 +123,8 @@ public class coneAuto extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
+
+        
 
         SwerveControllerCommand getBlockAuto =
             new SwerveControllerCommand(
@@ -100,6 +142,10 @@ public class coneAuto extends SequentialCommandGroup {
         addCommands(
             // new InstantCommand(() -> s_Swerve.resetOdometry(trajectory1.getInitialPose())),
             // getConeAuto,
+            // new InstantCommand(() -> s_Swerve.resetOdometry(pathPlannerTest.getInitialPose())),
+            // pathPlannerBuilder.fullAuto(pathPlannerTest)
+            
+            
             new InstantCommand(() -> s_Swerve.resetOdometry(coneTraj.getInitialPose())),
             getConeAuto
         );
