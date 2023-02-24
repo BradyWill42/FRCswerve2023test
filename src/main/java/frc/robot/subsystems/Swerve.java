@@ -111,6 +111,10 @@ public class Swerve extends SubsystemBase {
         gyro.zeroYaw();
     }
 
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
@@ -132,6 +136,9 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Robot Distance Traveled", getPose().getX());
 
         }
+
+        SmartDashboard.putNumber("Gyro Pitch", getPitch());
+
         SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     }
 }

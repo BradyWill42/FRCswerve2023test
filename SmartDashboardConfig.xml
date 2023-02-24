@@ -1,0 +1,88 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Gyro Pitch" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="348" y="310"/>
+	</widget>
+	<widget field="Initial YPose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="96" y="282"/>
+	</widget>
+	<widget field="Initial XPose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="92" y="308"/>
+	</widget>
+	<widget field="Mod 2 Cancoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="84" y="189"/>
+	</widget>
+	<widget field="Mod 1 Cancoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="331" y="50"/>
+	</widget>
+	<widget field="Mod 0 Cancoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="78" y="53"/>
+	</widget>
+	<widget field="Mod 3 Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="334" y="218"/>
+	</widget>
+	<widget field="Mod 2 Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="93" y="218"/>
+		<height>19</height>
+	</widget>
+	<widget field="Mod 1 Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="329" y="78"/>
+	</widget>
+	<widget field="Mod 0 Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="82" y="86"/>
+	</widget>
+	<widget field="Mod 2 Integrated" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="83" y="163"/>
+	</widget>
+	<widget field="Mod 3 Integrated" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="330" y="162"/>
+	</widget>
+	<widget field="Mod 1 Integrated" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="327" y="28"/>
+	</widget>
+	<widget field="Mod 0 Integrated" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="79" y="25"/>
+	</widget>
+	<widget field="Mod 3 Cancoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="331" y="191"/>
+	</widget>
+	<widget field="Ypose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="113" y="356"/>
+	</widget>
+	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="344" y="284"/>
+	</widget>
+	<widget field="Mod 1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1104" y="119"/>
+	</widget>
+	<widget field="Mod 3" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1108" y="202"/>
+	</widget>
+	<widget field="Mod 2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="894" y="201"/>
+	</widget>
+	<widget field="Mod 0" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="889" y="121"/>
+	</widget>
+	<widget field="XPose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="118" y="389"/>
+	</widget>
+	<widget field="Robot Distance Traveled" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="37" y="442"/>
+	</widget>
+	<widget field="Position of Encoder3" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1043" y="233"/>
+	</widget>
+	<widget field="Position of Encoder2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="828" y="232"/>
+	</widget>
+	<widget field="Position of Encoder1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1039" y="143"/>
+	</widget>
+	<widget field="Position of Encoder0" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="825" y="147"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

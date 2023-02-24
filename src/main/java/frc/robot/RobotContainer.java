@@ -88,8 +88,9 @@ public class RobotContainer {
         s_Swerve.zeroGyro();
 
         return new SequentialCommandGroup(
-            //new blockAuto(s_Swerve),
-            new coneAuto(s_Swerve)
+            new Balance(s_Swerve)
+            // new blockAuto(s_Swerve),
+            // new coneAuto(s_Swerve)
         );
         // return new blockAuto(s_Swerve);
     }
