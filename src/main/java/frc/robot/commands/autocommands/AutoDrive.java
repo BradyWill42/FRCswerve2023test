@@ -20,11 +20,12 @@ public class AutoDrive extends CommandBase {
 
   private Swerve drivetrain;
   private double distanceX;
-  private boolean fieldRelative;
+  private boolean fieldRelative, isOpenLoop;
 
 
-  public AutoDrive(double distancex, Swerve drivetrain, boolean fieldRelative) {
+  public AutoDrive(double distancex, Swerve drivetrain, boolean fieldRelative, boolean isOpenLoop) {
     this.fieldRelative = fieldRelative;
+    this.isOpenLoop = isOpenLoop;
     this.distanceX = distancex;
     this.drivetrain = drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,11 +40,7 @@ public class AutoDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(fieldRelative){
-      drivetrain.drive(new Translation2d(distanceX, 0), 0, true, true);
-    } else {
-      drivetrain.drive(new Translation2d(distanceX, 0), 0, false, true);
-    }
+    drivetrain.drive(new Translation2d(distanceX, 0), 0, fieldRelative, isOpenLoop);
   }
 
   // Called once the command ends or is interrupted.
@@ -61,10 +58,16 @@ public class AutoDrive extends CommandBase {
     SmartDashboard.putNumber("currentXpose", drivetrain.getPose().getX());
     SmartDashboard.putNumber("currentYpose", drivetrain.getPose().getY());
 
-    if(Math.abs(distanceX) <= Math.abs(drivetrain.getPose().getX())){
-        return true;
+    if(Math.abs(drivetrain.getPose().getX()) > Math.abs(distanceX)){
+      return drivetrain.getPose().getX() - distanceX > -0.1;
     } else {
-      return false;
+      return (drivetrain.getPose().getX() - distanceX < 0.1);
     }
+    
+    // if(Math.abs(distanceX - drivetrain.getPose().getX()) <= 0.15){
+    //     return true;
+    // } else {
+    //   return false;
+    // }
   }
 }

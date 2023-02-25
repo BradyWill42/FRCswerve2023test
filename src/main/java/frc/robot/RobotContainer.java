@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -90,11 +91,15 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         s_Swerve.zeroGyro();
+        s_Swerve.resetOdometry(new Pose2d());
+        double initAngle = s_Swerve.getPitch();
 
         return new SequentialCommandGroup(
-            // new AutoTurn(180, s_Swerve),
-            // new AutoDrive(-3.2, s_Swerve),
-            new BalanceRobot(s_Swerve)
+            new AutoDrive(-3, s_Swerve, true, true),
+            new AutoDrive(-5, s_Swerve, true, false),
+            new AutoTurn(Rotation2d.fromDegrees(180), s_Swerve, true, true),
+            new AutoDrive(3, s_Swerve, true, true),
+            new BalanceRobot(s_Swerve, initAngle)
         );
 
         // return new AutoDrive(1, s_Swerve);

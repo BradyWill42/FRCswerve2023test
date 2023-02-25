@@ -19,10 +19,13 @@ public class AutoTurn extends CommandBase {
   /** Creates a new AutoTurn. */
 
   private Swerve drivetrain;
-  private double rotation;
+  private Rotation2d rotation;
+  private boolean isOpenLoop, fieldRelative;
 
-  public AutoTurn(double rotation, Swerve drivetrain) {
+  public AutoTurn(Rotation2d rotation, Swerve drivetrain,boolean fieldRelative, boolean isOpenLoop) {
     this.rotation = rotation;
+    this.isOpenLoop = isOpenLoop;
+    this.fieldRelative = fieldRelative;
     this.drivetrain = drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -31,18 +34,14 @@ public class AutoTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.resetOdometry(new Pose2d());
+    // drivetrain.resetOdometry(new Pose2d());
     drivetrain.zeroGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(drivetrain.getPose().getRotation().getDegrees() < 0){
-      drivetrain.drive(new Translation2d(0, 0), Math.toRadians(-rotation), true, true);
-    } else{
-      drivetrain.drive(new Translation2d(0, 0), Math.toRadians(rotation), true, true);
-    }
+    drivetrain.drive(new Translation2d(0, 0), rotation.getRadians(), fieldRelative, isOpenLoop);
   }
 
   // Called once the command ends or is interrupted.
@@ -59,10 +58,7 @@ public class AutoTurn extends CommandBase {
 
     SmartDashboard.putNumber("currentRotationalpose", drivetrain.getPose().getRotation().getDegrees());
 
-    if(Math.abs(drivetrain.getPose().getRotation().getDegrees()) >= (rotation - 5)){
-        return true;
-    } else {
-      return false;
-    }
+    return (Math.abs(rotation.getDegrees() - drivetrain.getPose().getRotation().getDegrees()) <= 5);
+
   }
 }
