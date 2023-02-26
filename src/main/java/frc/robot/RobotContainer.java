@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -29,6 +31,9 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+
+    /* Autonomous Chooser */
+    private SendableChooser<Command> chooser;
 
     /* Drive Controls */
     private int translationAxis = XboxController.Axis.kLeftY.value;
@@ -66,8 +71,14 @@ public class RobotContainer {
             )
         );
 
+        //Initalize Autonomous Chooser
+        chooser = new SendableChooser<Command>();
+
         // Configure the button bindings
         configureButtonBindings();
+
+        //Initialize Autonomous Chooser
+        initializeAutoChooser();
     }
 
     /**
@@ -83,32 +94,24 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
+    public void initializeAutoChooser() {
+        chooser.setDefaultOption("Nothing", null);
+
+        chooser.addOption("Balance Auto", new BalanceAuto(s_Swerve));
+
+        chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve));
+
+        // chooser.addOption("Score from Right Side", getAutonomousCommand());
+
+        SmartDashboard.putData(chooser);
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        s_Swerve.zeroGyro();
-        s_Swerve.resetOdometry(new Pose2d());
-        double initAngle = s_Swerve.getPitch();
-
-        return new SequentialCommandGroup(
-            new AutoDrive(-3, s_Swerve, true, true),
-            new AutoDrive(-5, s_Swerve, true, false),
-            new AutoTurn(Rotation2d.fromDegrees(180), s_Swerve, true, true),
-            new AutoDrive(3, s_Swerve, true, true),
-            new BalanceRobot(s_Swerve, initAngle)
-        );
-
-        // return new AutoDrive(1, s_Swerve);
-
-        // return new SequentialCommandGroup(
-        //     new Balance(s_Swerve)
-        //     // new blockAuto(s_Swerve),
-        //     // new coneAuto(s_Swerve)
-        // );
-        // return new blockAuto(s_Swerve);
+        return chooser.getSelected();
     }
 }

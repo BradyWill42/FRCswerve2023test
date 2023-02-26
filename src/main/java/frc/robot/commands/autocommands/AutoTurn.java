@@ -47,7 +47,6 @@ public class AutoTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putString("You Reached This", "rotatedIdiot");
     drivetrain.drive(new Translation2d(), 0, false, true);
   }
 
@@ -55,10 +54,6 @@ public class AutoTurn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    SmartDashboard.putNumber("currentRotationalpose", drivetrain.getPose().getRotation().getDegrees());
-
     return (Math.abs(rotation.getDegrees() - drivetrain.getPose().getRotation().getDegrees()) <= 5);
-
   }
 }

@@ -46,7 +46,6 @@ public class AutoDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putString("You Reached This", "fIX1");
     drivetrain.drive(new Translation2d(), 0, false, true);
   }
 
@@ -54,20 +53,10 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    SmartDashboard.putNumber("currentXpose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("currentYpose", drivetrain.getPose().getY());
-
     if(Math.abs(drivetrain.getPose().getX()) > Math.abs(distanceX)){
       return drivetrain.getPose().getX() - distanceX > -0.1;
     } else {
       return (drivetrain.getPose().getX() - distanceX < 0.1);
     }
-    
-    // if(Math.abs(distanceX - drivetrain.getPose().getX()) <= 0.15){
-    //     return true;
-    // } else {
-    //   return false;
-    // }
   }
 }

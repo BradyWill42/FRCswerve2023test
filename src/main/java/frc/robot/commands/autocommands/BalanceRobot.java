@@ -47,7 +47,7 @@ public class BalanceRobot extends CommandBase {
     } else if(isBalanced() == 1){
       new AutoDrive(-0.5, drivetrain, false, true).execute();
     } else {
-      SmartDashboard.putNumber("TImer", timer.get());
+      SmartDashboard.putNumber("BalanceTimer", timer.get());
       new AutoDrive(0, drivetrain, false, true).execute();
     }
   }

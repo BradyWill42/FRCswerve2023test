@@ -25,15 +25,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 
-public class blockAuto extends SequentialCommandGroup {
-    private String blockTrajJSON = "paths/MoveToFirstBlock.wpilib.json";
-    private Trajectory blockTraj = new Trajectory();
-
-    private String coneTrajJSON = "paths/MoveToFirstCone.wpilib.json";
-    private Trajectory coneTraj = new Trajectory();
+public class firstConeAuto extends SequentialCommandGroup {
+    private String firstConeTrajJSON = "paths/MoveToFirstCone.wpilib.json";
+    private Trajectory firstConeTraj = new Trajectory();
 
 
-    public blockAuto(Swerve s_Swerve){
+    public firstConeAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -55,17 +52,10 @@ public class blockAuto extends SequentialCommandGroup {
         SmartDashboard.putNumber("Initial YPose", exampleTrajectory.getInitialPose().getY());
 
         try {
-            Path blockPath = Filesystem.getDeployDirectory().toPath().resolve(blockTrajJSON);
-            blockTraj = TrajectoryUtil.fromPathweaverJson(blockPath);
+            Path firstConePath = Filesystem.getDeployDirectory().toPath().resolve(firstConeTrajJSON);
+            firstConeTraj = TrajectoryUtil.fromPathweaverJson(firstConePath);
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + blockTrajJSON, ex.getStackTrace());
-        }
-        
-        try {
-            Path conePath = Filesystem.getDeployDirectory().toPath().resolve(coneTrajJSON);
-            coneTraj = TrajectoryUtil.fromPathweaverJson(conePath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + coneTrajJSON, ex.getStackTrace());
+            DriverStation.reportError("Unable to open trajectory: " + firstConeTrajJSON, ex.getStackTrace());
         }
 
         var thetaController =
@@ -73,20 +63,9 @@ public class blockAuto extends SequentialCommandGroup {
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        SwerveControllerCommand getConeAuto =
+        SwerveControllerCommand getfirstConeAuto =
             new SwerveControllerCommand(
-                coneTraj,
-                s_Swerve::getPose,
-                Constants.Swerve.swerveKinematics,
-                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-                thetaController,
-                s_Swerve::setModuleStates,
-                s_Swerve);
-
-        SwerveControllerCommand getBlockAuto =
-            new SwerveControllerCommand(
-                blockTraj,
+                firstConeTraj,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -98,10 +77,9 @@ public class blockAuto extends SequentialCommandGroup {
 
 
         addCommands(
-            // new InstantCommand(() -> s_Swerve.resetOdometry(trajectory1.getInitialPose())),
-            // getConeAuto,
-            new InstantCommand(() -> s_Swerve.resetOdometry(blockTraj.getInitialPose())),
-            getBlockAuto
+            new InstantCommand(() -> s_Swerve.resetOdometry(firstConeTraj.getInitialPose())),
+            getfirstConeAuto
         );
     }
 }
+
