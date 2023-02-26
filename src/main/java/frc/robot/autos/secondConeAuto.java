@@ -84,7 +84,7 @@ public class secondConeAuto extends SequentialCommandGroup {
                 s_Swerve);
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(secondConeTraj.getInitialPose())),
+            // new InstantCommand(() -> s_Swerve.resetOdometry(secondConeTraj.getInitialPose())),
             getsecondConeAuto
         );
     }

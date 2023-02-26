@@ -11,8 +11,9 @@ public class LeftSideAuto extends SequentialCommandGroup{
 
 
         addCommands(
-            new firstConeAuto(swerve),
-            new secondConeAuto(swerve)
+            // new firstConeAuto(swerve),
+            // new secondConeAuto(swerve)
+            new pathPlannerTest(swerve)
         );
 
 
