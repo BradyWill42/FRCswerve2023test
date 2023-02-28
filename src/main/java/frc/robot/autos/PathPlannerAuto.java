@@ -1,6 +1,8 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.commands.autocommands.AutoDrive;
+import frc.robot.commands.autocommands.AutoTurn;
 import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
@@ -36,17 +38,32 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 
-public class pathPlannerTest extends SequentialCommandGroup {
+public class PathPlannerAuto extends SequentialCommandGroup {
 
-    public pathPlannerTest(Swerve swerve){
+    public PathPlannerAuto(Swerve swerve){
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-        PathPlannerTrajectory grabConePath = PathPlanner.loadPath("grabConeTest", new PathConstraints(4, 3));
-        Command grabCone = swerve.followTrajectoryCommand(grabConePath);
+        PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverse", new PathConstraints(4, 3));
+        Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
+
+        PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweep", new PathConstraints(4, 3));
+        Command grabFirstConeSweep = swerve.followTrajectoryCommand(gFCS);
+
+        PathPlannerTrajectory gSCS = PathPlanner.loadPath("grabSecondConeSweep", new PathConstraints(4, 3));
+        Command grabSecondConeSweepCommand = swerve.followTrajectoryCommand(gSCS);
         
         addCommands(
-            new InstantCommand(() -> swerve.resetOdometry(grabConePath.getInitialPose())),
-            grabCone
+            new InstantCommand(() -> swerve.zeroGyro()),
+
+
+            // new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCR.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
+            // grabFirstConeReverse,
+
+            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
+            grabFirstConeSweep,
+            grabSecondConeSweepCommand
+  
+
         );
 
     }

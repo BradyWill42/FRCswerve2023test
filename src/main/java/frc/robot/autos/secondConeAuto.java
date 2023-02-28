@@ -32,12 +32,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class secondConeAuto extends SequentialCommandGroup {
+public class SecondConeAuto extends SequentialCommandGroup {
 
     private String secondConeTrajJSON = "paths/MoveToSecondCone.wpilib.json";
     private Trajectory secondConeTraj = new Trajectory();
 
-    public secondConeAuto(Swerve s_Swerve){
+    public SecondConeAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,

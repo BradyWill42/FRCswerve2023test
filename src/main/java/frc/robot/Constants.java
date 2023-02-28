@@ -86,6 +86,11 @@ public final class Constants {
         public static final IdleMode angleNeutralMode = IdleMode.kCoast;
         public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
+        /* Snake Neck Motor Constants */
+        public static final int rightNeckMotorID = 9;
+        public static final int leftNeckMotorID = 10;
+        public static final int jawMotorID = 11;
+
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot

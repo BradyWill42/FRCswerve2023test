@@ -25,12 +25,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 
-public class firstConeAuto extends SequentialCommandGroup {
+public class FirstConeAuto extends SequentialCommandGroup {
     private String firstConeTrajJSON = "paths/MoveToFirstCone.wpilib.json";
     private Trajectory firstConeTraj = new Trajectory();
 
 
-    public firstConeAuto(Swerve s_Swerve){
+    public FirstConeAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,

@@ -43,9 +43,9 @@ public class BalanceRobot extends CommandBase {
   @Override
   public void execute() {
     if(isBalanced() == -1){
-      new AutoDrive(0.5 , drivetrain, false, true).execute();
+      new AutoDrive(0.35 , drivetrain, false, true).execute();
     } else if(isBalanced() == 1){
-      new AutoDrive(-0.5, drivetrain, false, true).execute();
+      new AutoDrive(-0.35, drivetrain, false, true).execute();
     } else {
       SmartDashboard.putNumber("BalanceTimer", timer.get());
       new AutoDrive(0, drivetrain, false, true).execute();

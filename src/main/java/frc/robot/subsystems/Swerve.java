@@ -14,6 +14,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -83,6 +84,7 @@ public class Swerve extends SubsystemBase {
     public Pose2d getPose() {
         SmartDashboard.putNumber("XPose", swerveOdometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Ypose", swerveOdometry.getPoseMeters().getY());
+        // return swerveOdometry.update(getYaw(), getModulePositions());
         return swerveOdometry.getPoseMeters();
     }
 
@@ -100,13 +102,20 @@ public class Swerve extends SubsystemBase {
 
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
     public Command followTrajectoryCommand(PathPlannerTrajectory traj) {
+        var thetaController =
+            new ProfiledPIDController(
+                8, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        PIDController pid = new PIDController(thetaController.getP(), 0, 0, thetaController.getPeriod());
+
         return new PPSwerveControllerCommand(
             traj, 
             this::getPose, // Pose supplier
             Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
             new PIDController(20, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             new PIDController(20, 0, 0), // Y controller (usually the same values as X controller)
-            new PIDController(20, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            pid, // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             this::setModuleStates, // Module states consumer
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             this // Requires this drive subsystem
@@ -129,6 +138,7 @@ public class Swerve extends SubsystemBase {
         }
         return positions;
     }
+
 
     public void zeroGyro(){
         gyro.zeroYaw();

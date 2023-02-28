@@ -7,10 +7,15 @@ package frc.robot.commands.autocommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.Constants;
+import frc.robot.SwerveModule;
 import frc.robot.subsystems.*;
 
 
@@ -19,10 +24,10 @@ public class AutoTurn extends CommandBase {
   /** Creates a new AutoTurn. */
 
   private Swerve drivetrain;
-  private Rotation2d rotation;
+  private double rotation;
   private boolean isOpenLoop, fieldRelative;
 
-  public AutoTurn(Rotation2d rotation, Swerve drivetrain,boolean fieldRelative, boolean isOpenLoop) {
+  public AutoTurn(double rotation, Swerve drivetrain, boolean fieldRelative, boolean isOpenLoop) {
     this.rotation = rotation;
     this.isOpenLoop = isOpenLoop;
     this.fieldRelative = fieldRelative;
@@ -41,7 +46,7 @@ public class AutoTurn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(new Translation2d(0, 0), rotation.getRadians(), fieldRelative, isOpenLoop);
+    drivetrain.drive(new Translation2d(0, 0), (Rotation2d.fromDegrees(rotation)).getRadians(), fieldRelative, isOpenLoop);
   }
 
   // Called once the command ends or is interrupted.
@@ -54,6 +59,6 @@ public class AutoTurn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(rotation.getDegrees() - drivetrain.getPose().getRotation().getDegrees()) <= 5);
+    return (Math.abs(rotation - drivetrain.getPose().getRotation().getDegrees()) <= 5);
   }
 }

@@ -17,8 +17,8 @@ public class BalanceAuto extends SequentialCommandGroup{
 
         addCommands(
             new AutoDrive(-3, swerve, true, true),
-            new AutoDrive(-5, swerve, true, false),
-            new AutoTurn(Rotation2d.fromDegrees(180), swerve, true, true),
+            new AutoDrive(-5.2, swerve, true, false),
+            new AutoTurn(180, swerve, true, true),
             new AutoDrive(3, swerve, true, true),
             new BalanceRobot(swerve, initAngle)
         );

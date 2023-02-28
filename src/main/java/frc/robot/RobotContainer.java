@@ -95,7 +95,7 @@ public class RobotContainer {
     }
 
     public void initializeAutoChooser() {
-        chooser.setDefaultOption("Nothing", null);
+        chooser.setDefaultOption("Nothing", new AutoTurn(180, s_Swerve, true, true));
 
         chooser.addOption("Balance Auto", new BalanceAuto(s_Swerve));
 
