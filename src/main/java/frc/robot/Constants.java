@@ -86,11 +86,6 @@ public final class Constants {
         public static final IdleMode angleNeutralMode = IdleMode.kCoast;
         public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
-        /* Snake Neck Motor Constants */
-        public static final int rightNeckMotorID = 9;
-        public static final int leftNeckMotorID = 10;
-        public static final int jawMotorID = 11;
-
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot
@@ -131,6 +126,29 @@ public final class Constants {
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
+    }
+
+    public static final class Snake {
+
+        /* Snake Neutral Modes */
+        public static final IdleMode rightNeckNeutralMode = IdleMode.kBrake;
+        public static final IdleMode leftNeckNeutralMode = IdleMode.kBrake;
+        public static final IdleMode jawNeutralMode = IdleMode.kBrake;
+
+        /* Snake Neck Motor Constants */
+        public static final int rightNeckMotorID = 9;
+        public static final int leftNeckMotorID = 10;
+        public static final int jawMotorID = 11;
+
+        /* Snake Encoder DIO Ports */
+        public static final int rightNeckEncoderID1 = 0;
+        public static final int rightNeckEncoderID2 = 1;
+        public static final int leftNeckEncoderID1 = 2;
+        public static final int leftNeckEncoderID2 = 3;
+
+        /* Snake Jaw Angle Gear Ratio */
+        public static final double jawGearRatio = (100.0 / 1.0);
+
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot

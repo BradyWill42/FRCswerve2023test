@@ -104,4 +104,14 @@ public class Conversions {
     public static double MetersToNeo(double meters, double circumference, double gearRatio){
         return meters / (circumference / (4096.0 / gearRatio)) / gearRatio;
     }
+
+    /**
+     * @param positionCounts Neck Encoder Position Counts
+     * @param gearRatio Gear Ratio between Neck Motor and Neck
+     * @return Degrees of Rotation of Neck
+     */
+    public static double NeckToDegrees(double positionCounts, double gearRatio) {
+        return positionCounts * (360.0 / (gearRatio * 4096.0));
+    }
+
 }

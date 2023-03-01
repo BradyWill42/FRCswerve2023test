@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,13 +42,24 @@ public class RobotContainer {
     private int strafeAxis = XboxController.Axis.kLeftX.value;
     private int rotationAxis = XboxController.Axis.kRightX.value;
 
+    /* Field Oriented Toggle */
+    private boolean isFieldOriented = false;
+
+
     /* Driver Buttons */
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton armOut = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton armIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton armOff = new JoystickButton(driver, XboxController.Button.kB.value);
+
+    private final JoystickButton armUp = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton armDown = new JoystickButton(driver, XboxController.Button.kBack.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Neck neck = new Neck();
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,7 +72,8 @@ public class RobotContainer {
         }
         if(rotationAxis < Math.abs(0.1)){
             rotationAxis = 0;
-        }
+        }        
+        
 
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
@@ -67,10 +81,11 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(translationAxis), 
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            )
+                () -> isFieldOriented
+                )
         );
 
+    
         //Initalize Autonomous Chooser
         chooser = new SendableChooser<Command>();
 
@@ -89,10 +104,32 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-
         zeroOdometry.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
+
+        (armOut.onTrue(new InstantCommand(() -> neck.armOut())).or(armIn.onTrue(new InstantCommand(() -> neck.armIn())))).onFalse(new InstantCommand(() -> neck.armOff()));
+
+
+        (armUp.onTrue(new InstantCommand(() -> neck.armUp())).or(armDown.onTrue(new InstantCommand(() -> neck.armDown())))).onFalse(new InstantCommand(() -> neck.angleArmOff()));
+
+
+
+
+
+
+        // .or(armIn.onTrue(new InstantCommand(() -> neck.armIn())))
+        // .or(armOff.onTrue(new InstantCommand(() -> neck.armOff())));
+
+
+
+
     }
+
+    public void toggleRobotCentric(){
+        isFieldOriented = !isFieldOriented;
+    }
+
 
     public void initializeAutoChooser() {
         chooser.setDefaultOption("Nothing", new AutoTurn(180, s_Swerve, true, true));
