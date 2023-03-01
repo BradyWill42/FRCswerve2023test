@@ -50,16 +50,16 @@ public class RobotContainer {
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton armOut = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton armIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton armOff = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton neckOut = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton neckIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    private final JoystickButton armUp = new JoystickButton(driver, XboxController.Button.kStart.value);
-    private final JoystickButton armDown = new JoystickButton(driver, XboxController.Button.kBack.value);
+    private final JoystickButton jawOpen = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton jawClose = new JoystickButton(driver, XboxController.Button.kBack.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Neck neck = new Neck();
+    private final Jaw jaw = new Jaw();
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -108,20 +108,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
 
-        (armOut.onTrue(new InstantCommand(() -> neck.armOut())).or(armIn.onTrue(new InstantCommand(() -> neck.armIn())))).onFalse(new InstantCommand(() -> neck.armOff()));
+        (neckOut.onTrue(new InstantCommand(() -> neck.neckOut())).or(neckIn.onTrue(new InstantCommand(() -> neck.neckIn())))).onFalse(new InstantCommand(() -> neck.neckOff()));
 
 
-        (armUp.onTrue(new InstantCommand(() -> neck.armUp())).or(armDown.onTrue(new InstantCommand(() -> neck.armDown())))).onFalse(new InstantCommand(() -> neck.angleArmOff()));
-
-
-
-
-
-
-        // .or(armIn.onTrue(new InstantCommand(() -> neck.armIn())))
-        // .or(armOff.onTrue(new InstantCommand(() -> neck.armOff())));
-
-
+        (jawOpen.onTrue(new InstantCommand(() -> jaw.jawOpen())).or(jawClose.onTrue(new InstantCommand(() -> jaw.jawClose())))).onFalse(new InstantCommand(() -> jaw.jawOff()));
 
 
     }
@@ -152,3 +142,7 @@ public class RobotContainer {
         return chooser.getSelected();
     }
 }
+
+
+
+//I think the programmer likes animals a little too much

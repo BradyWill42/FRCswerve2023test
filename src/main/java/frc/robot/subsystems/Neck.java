@@ -8,10 +8,11 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,7 +20,10 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
@@ -27,49 +31,81 @@ import frc.robot.Constants;
 
 public class Neck extends SubsystemBase {
 
-  private final CANSparkMax leftNeckMotor, rightNeckMotor, jawMotor;
-  private final Encoder leftNeckEncoder, rightNeckEncoder;
-  private final SparkMaxAbsoluteEncoder jawEncoder;
-  private final double shaftCircumference = Units.inchesToMeters(1.0);
+  private CANSparkMax leftNeckMotor, rightNeckMotor;
+  private Encoder leftNeckEncoder, rightNeckEncoder;
+  private SparkMaxPIDController leftNeckPIDController, rightNeckPIDController;
+  private final DoubleSolenoid brake;
+  private final Solenoid brakeEnabled, brakeDisabled;
+
+  private final double maxPosition = 1.5;
+  private final double minPosition = 0.01;
+  private final double shaftDiameter = Units.inchesToMeters(1.0);
 
   public Neck() {
     leftNeckMotor = new CANSparkMax(Constants.Snake.leftNeckMotorID,  MotorType.kBrushless);
     rightNeckMotor = new CANSparkMax(Constants.Snake.rightNeckMotorID,  MotorType.kBrushless);
-    jawMotor = new CANSparkMax(Constants.Snake.jawMotorID,  MotorType.kBrushless);
+    brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
+    brakeEnabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1);
+    brakeDisabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID2);
     
     leftNeckEncoder = new Encoder(Constants.Snake.leftNeckEncoderID1, Constants.Snake.leftNeckEncoderID2);
     rightNeckEncoder = new Encoder(Constants.Snake.rightNeckEncoderID1, Constants.Snake.rightNeckEncoderID2);
-    // jawEncoder = jawMotor.getEncoder();
-    jawEncoder = jawMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
-    leftNeckMotor.restoreFactoryDefaults();
-    rightNeckMotor.restoreFactoryDefaults();
-    jawMotor.restoreFactoryDefaults();
-    
-    leftNeckMotor.setIdleMode(Constants.Snake.leftNeckNeutralMode);
-    rightNeckMotor.setIdleMode(Constants.Snake.rightNeckNeutralMode);
-    jawMotor.setIdleMode(Constants.Snake.jawNeutralMode);  
+    initPID();
+    resetMotors();
 
-    leftNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftCircumference));
-    rightNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftCircumference) );
-    jawEncoder.setPositionConversionFactor((1/Constants.Snake.jawGearRatio) // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
-            * 360); // 1/360 rotations is 1 degree, 1 rotation is 360 degrees.
-  
-    rightNeckMotor.follow(leftNeckMotor);
+    brake.set(DoubleSolenoid.Value.kForward);
+    brakeEnabled.set(false);
+    brakeDisabled.set(true);
 
+    setEncoderCoversions();
   }
 
-  // Check if motor is at its forward soft limit
+  public void initPID(){
+    leftNeckPIDController = leftNeckMotor.getPIDController();
+    rightNeckPIDController = rightNeckMotor.getPIDController();
+    
+    leftNeckPIDController.setP(0.05);
+    leftNeckPIDController.setI(0.0);
+    leftNeckPIDController.setD(0.0);
+    leftNeckPIDController.setFF(0.0);
+
+    rightNeckPIDController.setP(0.05);
+    rightNeckPIDController.setI(0.0);
+    rightNeckPIDController.setD(0.0);
+    rightNeckPIDController.setFF(0.0);
+  }
+
+  public void setEncoderCoversions(){
+    leftNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftDiameter));
+    rightNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftDiameter) );
+  }
+
+  public void resetMotors(){
+    leftNeckMotor.restoreFactoryDefaults();
+    rightNeckMotor.restoreFactoryDefaults();
+
+    leftNeckMotor.setIdleMode(Constants.Snake.leftNeckNeutralMode);
+    rightNeckMotor.setIdleMode(Constants.Snake.rightNeckNeutralMode);
+    
+    rightNeckMotor.follow(leftNeckMotor);
+  }
+
+  public void toggleBrake(){
+    brake.toggle();
+  }
+
+  public void enableBrakes(boolean isBraked){
+    brakeDisabled.set(!isBraked);
+    brakeEnabled.set(isBraked);
+  }
+  
 
   public void resetArmEncoders() {
     leftNeckEncoder.reset();
     rightNeckEncoder.reset();
   }
-  
-  public void resetjawEncoder() {
-    jawEncoder.setZeroOffset(jawEncoder.getPosition());
-  }
-  
+    
   public double getLeftNeckDistance(){
     return leftNeckEncoder.getDistance();
   }
@@ -78,45 +114,38 @@ public class Neck extends SubsystemBase {
     return rightNeckEncoder.getDistance();
   }
   
-  public double getNeckAngle(){
-    return jawEncoder.getPosition();
-  }
-  
- 
-
-  public void armOut() {
+  public void neckOut() {
+    if(leftNeckEncoder.getDistance() < maxPosition){
       leftNeckMotor.set(.3);
       rightNeckMotor.set(.3);
+    }
   }
 
-  public void armIn() {
+  public void neckIn() {
+    if(leftNeckEncoder.getDistance() > minPosition){
       leftNeckMotor.set(-.3);
       rightNeckMotor.set(-.3);
+    }
   }
 
-  public void armOff() {
+  public void neckOff() {
     leftNeckMotor.set(0);
     rightNeckMotor.set(0);
-  }
-  
-  // public void setArmPosition(double position){
-  //   jawMotor.set(CANSparkMax.ControlType.kPosition, position);
-  // }
-  
-  public void armUp(){
-    jawMotor.set(.9); 
-  }
-  
-  public void armDown(){
-    jawMotor.set(-.9); 
-  }
 
-  public void angleArmOff(){
-    jawMotor.set(0);
+    enableBrakes(true);
+  }
+  
+  public void setNeckPosition(double position){
+    leftNeckPIDController.setReference(position, ControlType.kPosition);
+    rightNeckPIDController.setReference(position, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
     // SmartDashboard.putNumber("Extend Arm Encoder", arm.getSelectedSensorPosition());
+
+    SmartDashboard.putNumber("leftNeckDistance", getLeftNeckDistance());
+    SmartDashboard.putNumber("rightNeckDistance", getRightNeckDistance());
+
   }
 }
