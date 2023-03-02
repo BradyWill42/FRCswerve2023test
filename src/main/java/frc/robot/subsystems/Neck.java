@@ -34,7 +34,7 @@ public class Neck extends SubsystemBase {
   private CANSparkMax leftNeckMotor, rightNeckMotor;
   private Encoder leftNeckEncoder, rightNeckEncoder;
   private SparkMaxPIDController leftNeckPIDController, rightNeckPIDController;
-  private final DoubleSolenoid brake;
+  // private final DoubleSolenoid brake;
   private final Solenoid brakeEnabled, brakeDisabled;
 
   private final double maxPosition = 1.5;
@@ -44,7 +44,7 @@ public class Neck extends SubsystemBase {
   public Neck() {
     leftNeckMotor = new CANSparkMax(Constants.Snake.leftNeckMotorID,  MotorType.kBrushless);
     rightNeckMotor = new CANSparkMax(Constants.Snake.rightNeckMotorID,  MotorType.kBrushless);
-    brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
+    // brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
     brakeEnabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1);
     brakeDisabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID2);
     
@@ -54,9 +54,9 @@ public class Neck extends SubsystemBase {
     initPID();
     resetMotors();
 
-    brake.set(DoubleSolenoid.Value.kForward);
-    brakeEnabled.set(false);
-    brakeDisabled.set(true);
+    // brake.set(DoubleSolenoid.Value.kForward);
+    brakeEnabled.set(true);
+    brakeDisabled.set(false);
 
     setEncoderCoversions();
   }
@@ -91,9 +91,9 @@ public class Neck extends SubsystemBase {
     rightNeckMotor.follow(leftNeckMotor);
   }
 
-  public void toggleBrake(){
-    brake.toggle();
-  }
+  // public void toggleBrake(){
+  //   brake.toggle();
+  // }
 
   public void enableBrakes(boolean isBraked){
     brakeDisabled.set(!isBraked);
@@ -122,10 +122,10 @@ public class Neck extends SubsystemBase {
   }
 
   public void neckIn() {
-    if(leftNeckEncoder.getDistance() > minPosition){
+    //if(leftNeckEncoder.getDistance() > minPosition){
       leftNeckMotor.set(-.3);
       rightNeckMotor.set(-.3);
-    }
+    //}
   }
 
   public void neckOff() {

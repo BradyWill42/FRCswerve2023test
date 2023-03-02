@@ -33,6 +33,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick operator = new Joystick(1);
 
     /* Autonomous Chooser */
     private SendableChooser<Command> chooser;
@@ -50,17 +51,21 @@ public class RobotContainer {
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton neckOut = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton neckIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    private final JoystickButton jawOpen = new JoystickButton(driver, XboxController.Button.kStart.value);
-    private final JoystickButton jawClose = new JoystickButton(driver, XboxController.Button.kBack.value);
 
+    /* Operator Buttons */
+    private final JoystickButton neckOut = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton neckIn = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton jawOpen = new JoystickButton(operator, XboxController.Button.kStart.value);
+    private final JoystickButton jawClose = new JoystickButton(operator, XboxController.Button.kBack.value);
+    private final JoystickButton toggleGrabber = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton resetJaw = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton setJawPosition = new JoystickButton(operator, XboxController.Button.kX.value);
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Neck neck = new Neck();
     private final Jaw jaw = new Jaw();
-
+    private final Grabber grabber = new Grabber();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -110,8 +115,14 @@ public class RobotContainer {
 
         (neckOut.onTrue(new InstantCommand(() -> neck.neckOut())).or(neckIn.onTrue(new InstantCommand(() -> neck.neckIn())))).onFalse(new InstantCommand(() -> neck.neckOff()));
 
-
         (jawOpen.onTrue(new InstantCommand(() -> jaw.jawOpen())).or(jawClose.onTrue(new InstantCommand(() -> jaw.jawClose())))).onFalse(new InstantCommand(() -> jaw.jawOff()));
+
+        toggleGrabber.onTrue(new InstantCommand(() -> grabber.grab()));
+
+        resetJaw.onTrue(new InstantCommand(() -> jaw.resetjawEncoder()));
+
+        setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(45.0)));
+
 
 
     }
@@ -128,6 +139,9 @@ public class RobotContainer {
 
         chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve));
 
+        chooser.addOption("Set Arm to 45 Degrees", new InstantCommand(() -> jaw.setJawAngle(45.0)));
+
+        
         // chooser.addOption("Score from Right Side", getAutonomousCommand());
 
         SmartDashboard.putData(chooser);

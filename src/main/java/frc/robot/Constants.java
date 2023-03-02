@@ -154,8 +154,8 @@ public final class Constants {
 
         /* Pneumatics Constants */
         
-        public static final int brakeID1 = 6;
-        public static final int brakeID2 = 7;
+        public static final int brakeID1 = 7;
+        public static final int brakeID2 = 6;
 
         public static final int boopID1 = 8;
         public static final int boopID2 = 9;

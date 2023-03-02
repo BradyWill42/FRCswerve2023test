@@ -7,6 +7,8 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,6 +35,7 @@ public class Robot extends TimedRobot {
   // private Trajectory trajectory2 = new Trajectory();
 
   private RobotContainer m_robotContainer;
+  private UsbCamera camera;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,6 +43,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //Initialize USB camera
+    
+    camera = new UsbCamera("USBCam", 1);
+
+    CameraServer.startAutomaticCapture();
+
     ctreConfigs = new CTREConfigs();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

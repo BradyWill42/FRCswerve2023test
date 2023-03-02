@@ -14,14 +14,14 @@ public class BoopBoop extends SubsystemBase {
 
 
   private final DoubleSolenoid booper;
-  private final Solenoid thrust, pullOut;
+  // private final Solenoid thrust, pullOut;
 
   
   /** Creates a new Climber. */
   public BoopBoop() {
     booper = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.Snake.boopID1, Constants.Snake.boopID2); 
-    thrust = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
-    pullOut = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
+    // thrust = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
+    // pullOut = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
 
     booper.set(DoubleSolenoid.Value.kForward);
   }
@@ -30,10 +30,10 @@ public class BoopBoop extends SubsystemBase {
     booper.toggle();
 	}
 
-  public void pump(boolean dump){
-    thrust.set(dump);
-    pullOut.set(!dump);
-  }
+  // public void pump(boolean dump){
+  //   thrust.set(dump);
+  //   pullOut.set(!dump);
+  // }
 
 
 

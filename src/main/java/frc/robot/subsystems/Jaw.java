@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -31,22 +32,24 @@ import frc.robot.Constants;
 public class Jaw extends SubsystemBase {
 
   private CANSparkMax jawMotor;
-  private SparkMaxAbsoluteEncoder jawEncoder;
+  private RelativeEncoder jawEncoder;
   private SparkMaxPIDController jawPIDController;
 
   public Jaw() {
     jawMotor = new CANSparkMax(Constants.Snake.jawMotorID,  MotorType.kBrushless);
-    
-    jawEncoder = jawMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    jawMotor.setIdleMode(Constants.Snake.jawNeutralMode); 
 
+    jawEncoder = jawMotor.getEncoder();
     initPID();
-    resetMotors();
 
 
     setEncoderCoversions();
   }
 
   public void initPID(){
+    jawPIDController = jawMotor.getPIDController();
+
+
     jawPIDController.setP(0.05);
     jawPIDController.setI(0.0);
     jawPIDController.setD(0.0);
@@ -62,12 +65,12 @@ public class Jaw extends SubsystemBase {
     jawMotor.setIdleMode(Constants.Snake.jawNeutralMode); 
   }
 
-  public void setNeckAngle(double angle){
+  public void setJawAngle(double angle){
     jawPIDController.setReference(angle, ControlType.kPosition);
   }
   
   public void resetjawEncoder() {
-    jawEncoder.setZeroOffset(jawEncoder.getPosition());
+    jawEncoder.setPosition(0);
   }
 
   public double getJawAngle(){
@@ -75,11 +78,11 @@ public class Jaw extends SubsystemBase {
   }
   
   public void jawOpen(){
-    jawMotor.set(.9); 
+    jawMotor.set(0.2); 
   }
   
   public void jawClose(){
-    jawMotor.set(-.9); 
+    jawMotor.set(-0.2); 
   }
 
   public void jawOff(){
