@@ -71,6 +71,10 @@ public class RobotContainer {
     private final Jaw jaw = new Jaw();
     private final Grabber grabber = new Grabber();
     private final BoopBoop boop = new BoopBoop();
+    
+    
+    
+    
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -129,6 +133,16 @@ public class RobotContainer {
         setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(65.0)));
 
         booper.onTrue(new InstantCommand(() -> boop.boop()));
+        
+        int pov = operator.getPOV();
+        if(pov == 180){
+            // Mid position:
+            new PlaceCone(neck, jaw, 65.0, length));   
+        }
+        else if(pov == 0){
+            // Bottom position:
+            new PlaceCone(neck, jaw, 0, 0);   
+        }
 
     }
 
