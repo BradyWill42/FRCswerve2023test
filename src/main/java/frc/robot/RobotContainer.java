@@ -51,6 +51,8 @@ public class RobotContainer {
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton booper = new JoystickButton(driver, XboxController.Axis.kRightTrigger.value);
+    //private final JoystickButton rightOut = new JoystickButton(driver, XboxController.Button.kX.value);
 
 
     /* Operator Buttons */
@@ -61,11 +63,14 @@ public class RobotContainer {
     private final JoystickButton toggleGrabber = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton resetJaw = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton setJawPosition = new JoystickButton(operator, XboxController.Button.kX.value);
+
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Neck neck = new Neck();
     private final Jaw jaw = new Jaw();
     private final Grabber grabber = new Grabber();
+    private final BoopBoop boop = new BoopBoop();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -121,9 +126,9 @@ public class RobotContainer {
 
         resetJaw.onTrue(new InstantCommand(() -> jaw.resetjawEncoder()));
 
-        setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(45.0)));
+        setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(65.0)));
 
-
+        booper.onTrue(new InstantCommand(() -> boop.boop()));
 
     }
 
@@ -139,7 +144,7 @@ public class RobotContainer {
 
         chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve));
 
-        chooser.addOption("Set Arm to 45 Degrees", new InstantCommand(() -> jaw.setJawAngle(45.0)));
+        chooser.addOption("Set Arm to 65 Degrees", new InstantCommand(() -> jaw.setJawAngle(65.0)));
 
         
         // chooser.addOption("Score from Right Side", getAutonomousCommand());

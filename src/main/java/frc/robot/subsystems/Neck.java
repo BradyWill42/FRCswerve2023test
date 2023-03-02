@@ -116,16 +116,28 @@ public class Neck extends SubsystemBase {
   
   public void neckOut() {
     if(leftNeckEncoder.getDistance() < maxPosition){
-      leftNeckMotor.set(.3);
-      rightNeckMotor.set(.3);
+      leftNeckMotor.set(.7);
+      rightNeckMotor.set(.7);
     }
   }
 
   public void neckIn() {
     //if(leftNeckEncoder.getDistance() > minPosition){
-      leftNeckMotor.set(-.3);
-      rightNeckMotor.set(-.3);
+      leftNeckMotor.set(-.7);
+      rightNeckMotor.set(-.7);
     //}
+  }
+  public void rightNeckIn(){
+    rightNeckMotor.set(-.7);
+  }
+  public void rightNeckOut(){
+    leftNeckMotor.set(.7);
+  }
+  public void leftNeckIn(){
+    leftNeckMotor.set(-.7);
+  }
+  public void leftNeckOut(){
+    rightNeckMotor.set(.7);
   }
 
   public void neckOff() {

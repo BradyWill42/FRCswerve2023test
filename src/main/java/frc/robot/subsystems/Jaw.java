@@ -50,14 +50,20 @@ public class Jaw extends SubsystemBase {
     jawPIDController = jawMotor.getPIDController();
 
 
-    jawPIDController.setP(0.05);
-    jawPIDController.setI(0.0);
-    jawPIDController.setD(0.0);
-    jawPIDController.setFF(0.0);
+    jawPIDController.setP(0.012744, 0);
+    jawPIDController.setI(0.00001, 0);
+    jawPIDController.setD(0.0042177, 0);
+    jawPIDController.setFF(0.0, 0);
+
+    jawPIDController.setP(0, 1);
+    jawPIDController.setI(0, 1);
+    jawPIDController.setD(0, 1);
+    jawPIDController.setFF(0, 1);
   }
 
   public void setEncoderCoversions(){
-    jawEncoder.setPositionConversionFactor((1/Constants.Snake.jawGearRatio) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
+    jawEncoder.setPositionConversionFactor((1.0 / Constants.Snake.jawGearRatio) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
+    jawEncoder.setVelocityConversionFactor(((1.0 / Constants.Snake.jawGearRatio) * 360) / 60.0);
   }
 
   public void resetMotors(){
@@ -78,15 +84,17 @@ public class Jaw extends SubsystemBase {
   }
   
   public void jawOpen(){
-    jawMotor.set(0.2); 
+    jawMotor.set(0.4); 
+    // jawPIDController.setReference(0.4, ControlType.kVelocity);
   }
   
   public void jawClose(){
-    jawMotor.set(-0.2); 
+    jawMotor.set(-0.4);
+    // jawPIDController.setReference(-0.4, ControlType.kVelocity);
   }
 
   public void jawOff(){
-    jawMotor.set(0);
+    jawMotor.set(0.01);
   }
 
   @Override
