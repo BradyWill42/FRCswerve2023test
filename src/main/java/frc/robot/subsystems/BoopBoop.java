@@ -19,7 +19,7 @@ public class BoopBoop extends SubsystemBase {
   
   /** Creates a new Climber. */
   public BoopBoop() {
-    booper = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.Snake.boopID1, Constants.Snake.boopID2); 
+    booper = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, Constants.Snake.boopID1, Constants.Snake.boopID2); 
     // thrust = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
     // pullOut = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
 

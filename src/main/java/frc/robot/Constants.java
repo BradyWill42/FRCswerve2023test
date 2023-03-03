@@ -153,7 +153,6 @@ public final class Constants {
         public static final double jawGearRatio = (100.0 / 1.0);
 
         /* Pneumatics Constants */
-        
         public static final int brakeID1 = 7;
         public static final int brakeID2 = 6;
 
@@ -163,7 +162,37 @@ public final class Constants {
         public static final int grabberID1 = 0;
         public static final int grabberID2 = 1;
 
+        /* Jaw and Neck Distance and Angle Constants */
+        public static final double downAngle = 0.0;
+        public static final double midAngle = 65.0;
 
+
+
+        /* Jaw PID Constants */
+        public static final double jawPP = 0.012744;
+        public static final double jawPI = 0.00001;
+        public static final double jawPD = 0.0042177;
+        public static final double jawPF = 0.0;
+        public static final int jawPSlot = 0;
+
+        public static final double jawVP = 0.0;
+        public static final double jawVI = 0.0;
+        public static final double jawVD = 0.0;
+        public static final double jawVF = 0.0;
+        public static final int jawVSlot = 1;
+
+        /* Neck PID Constants */
+        public static final double neckPP = 0.0;
+        public static final double neckPI = 0.0;
+        public static final double neckPD = 0.0;
+        public static final double neckPF = 0.0;
+        public static final int neckPSlot = 0;
+
+        public static final double neckVP = 0.0;
+        public static final double neckVI = 0.0;
+        public static final double neckVD = 0.0;
+        public static final double neckVF = 0.0;
+        public static final int neckVSlot = 1;
 
     }
 

@@ -3,10 +3,14 @@ package frc.robot.autos;
 import frc.robot.Constants;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
+import frc.robot.subsystems.BoopBoop;
+import frc.robot.subsystems.Jaw;
+import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.InstantSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +37,16 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
 public class LeftSideAuto extends SequentialCommandGroup {
 
-    public LeftSideAuto(Swerve swerve){
+    public LeftSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck){
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
         PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverse", new PathConstraints(4, 3));
@@ -53,16 +59,30 @@ public class LeftSideAuto extends SequentialCommandGroup {
         Command grabSecondConeSweepCommand = swerve.followTrajectoryCommand(gSCS);
         
         addCommands(
+
             new InstantCommand(() -> swerve.zeroGyro()),
-
-
-            // new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCR.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
-            // grabFirstConeReverse,
-
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> jaw.resetjawEncoder()),
+                new InstantCommand(() -> neck.resetArmEncoders())
+            ),
+
+
+            new ParallelCommandGroup(
+                new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle))
+            ),
+
             grabFirstConeSweep,
-            grabSecondConeSweepCommand
-  
+
+            new InstantCommand(() -> booper.boop()),
+            new WaitCommand(0.01),
+            new InstantCommand(() -> booper.boop()),
+            
+            grabSecondConeSweepCommand,
+
+            new InstantCommand(() -> booper.boop()),
+            new WaitCommand(0.01),
+            new InstantCommand(() -> booper.boop())
 
         );
 

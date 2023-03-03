@@ -50,7 +50,7 @@ public class Neck extends SubsystemBase {
     
     leftNeckEncoder = new Encoder(Constants.Snake.leftNeckEncoderID1, Constants.Snake.leftNeckEncoderID2);
     rightNeckEncoder = new Encoder(Constants.Snake.rightNeckEncoderID1, Constants.Snake.rightNeckEncoderID2);
-
+    
     initPID();
     resetMotors();
 
@@ -64,21 +64,23 @@ public class Neck extends SubsystemBase {
   public void initPID(){
     leftNeckPIDController = leftNeckMotor.getPIDController();
     rightNeckPIDController = rightNeckMotor.getPIDController();
-    
-    leftNeckPIDController.setP(0.05);
-    leftNeckPIDController.setI(0.0);
-    leftNeckPIDController.setD(0.0);
-    leftNeckPIDController.setFF(0.0);
 
-    rightNeckPIDController.setP(0.05);
-    rightNeckPIDController.setI(0.0);
-    rightNeckPIDController.setD(0.0);
-    rightNeckPIDController.setFF(0.0);
+    leftNeckPIDController.setP(Constants.Snake.neckPP, Constants.Snake.neckPSlot);
+    leftNeckPIDController.setI(Constants.Snake.neckPI, Constants.Snake.neckPSlot);
+    leftNeckPIDController.setD(Constants.Snake.neckPD, Constants.Snake.neckPSlot);
+    leftNeckPIDController.setFF(Constants.Snake.neckPF, Constants.Snake.neckPSlot);
+
+    rightNeckPIDController.setP(Constants.Snake.neckVP, Constants.Snake.neckVSlot);
+    rightNeckPIDController.setI(Constants.Snake.neckVI, Constants.Snake.neckVSlot);
+    rightNeckPIDController.setD(Constants.Snake.neckVD, Constants.Snake.neckVSlot);
+    rightNeckPIDController.setFF(Constants.Snake.neckVF, Constants.Snake.neckVSlot);
   }
 
   public void setEncoderCoversions(){
-    leftNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftDiameter));
-    rightNeckEncoder.setDistancePerPulse((1.0 / 8192.0) * (Math.PI * shaftDiameter) );
+    rightNeckEncoder.setReverseDirection(true);
+
+    leftNeckEncoder.setDistancePerPulse((1.0 / 2048.0) * (Math.PI * shaftDiameter));
+    rightNeckEncoder.setDistancePerPulse((1.0 / 2048.0) * (Math.PI * shaftDiameter));
   }
 
   public void resetMotors(){

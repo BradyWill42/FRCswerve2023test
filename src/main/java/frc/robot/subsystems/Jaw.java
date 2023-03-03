@@ -34,6 +34,7 @@ public class Jaw extends SubsystemBase {
   private CANSparkMax jawMotor;
   private RelativeEncoder jawEncoder;
   private SparkMaxPIDController jawPIDController;
+  private double currentPosition;
 
   public Jaw() {
     jawMotor = new CANSparkMax(Constants.Snake.jawMotorID,  MotorType.kBrushless);
@@ -50,15 +51,15 @@ public class Jaw extends SubsystemBase {
     jawPIDController = jawMotor.getPIDController();
 
 
-    jawPIDController.setP(0.012744, 0);
-    jawPIDController.setI(0.00001, 0);
-    jawPIDController.setD(0.0042177, 0);
-    jawPIDController.setFF(0.0, 0);
+    jawPIDController.setP(Constants.Snake.jawPP, Constants.Snake.jawPSlot);
+    jawPIDController.setI(Constants.Snake.jawPI, Constants.Snake.jawPSlot);
+    jawPIDController.setD(Constants.Snake.jawPD, Constants.Snake.jawPSlot);
+    jawPIDController.setFF(Constants.Snake.jawPF, Constants.Snake.jawPSlot);
 
-    jawPIDController.setP(0, 1);
-    jawPIDController.setI(0, 1);
-    jawPIDController.setD(0, 1);
-    jawPIDController.setFF(0, 1);
+    jawPIDController.setP(Constants.Snake.jawVP, Constants.Snake.jawVSlot);
+    jawPIDController.setI(Constants.Snake.jawVI, Constants.Snake.jawVSlot);
+    jawPIDController.setD(Constants.Snake.jawVD, Constants.Snake.jawVSlot);
+    jawPIDController.setFF(Constants.Snake.jawVF, Constants.Snake.jawVSlot);
   }
 
   public void setEncoderCoversions(){
@@ -84,7 +85,7 @@ public class Jaw extends SubsystemBase {
   }
   
   public void jawOpen(){
-    jawMotor.set(0.4); 
+    jawMotor.set(0.4);
     // jawPIDController.setReference(0.4, ControlType.kVelocity);
   }
   
@@ -94,7 +95,8 @@ public class Jaw extends SubsystemBase {
   }
 
   public void jawOff(){
-    jawMotor.set(0.01);
+    currentPosition = jawEncoder.getPosition();
+    jawPIDController.setReference(currentPosition, ControlType.kPosition);
   }
 
   @Override
