@@ -12,28 +12,35 @@ import frc.robot.Constants;
 
 public class BoopBoop extends SubsystemBase {
 
-
-  private final DoubleSolenoid booper;
-  // private final Solenoid thrust, pullOut;
+  // private final DoubleSolenoid booper;
+  private final Solenoid thrust, pullOut;
+  private boolean isBooped;
 
   
   /** Creates a new Climber. */
   public BoopBoop() {
-    booper = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, Constants.Snake.boopID1, Constants.Snake.boopID2); 
-    // thrust = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
-    // pullOut = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
+    // booper = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, Constants.Snake.boopID1, Constants.Snake.boopID2); 
+    thrust = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
+    pullOut = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
 
-    booper.set(DoubleSolenoid.Value.kForward);
+    pump(false);
+    // booper.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void boop(){
-    booper.toggle();
-	}
+  // public void boop(){
+  //   booper.toggle();
+	// }
 
-  // public void pump(boolean dump){
-  //   thrust.set(dump);
-  //   pullOut.set(!dump);
-  // }
+  public void pump(boolean dump){
+    thrust.set(dump);
+    pullOut.set(!dump);
+
+    isBooped = dump;
+  }
+
+  public boolean isBooped(){
+    return isBooped;
+  }
 
 
 

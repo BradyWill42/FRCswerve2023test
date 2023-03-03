@@ -156,15 +156,17 @@ public final class Constants {
         public static final int brakeID1 = 7;
         public static final int brakeID2 = 6;
 
-        public static final int boopID1 = 8;
-        public static final int boopID2 = 9;
+        public static final int boopID1 = 9;
+        public static final int boopID2 = 8;
 
-        public static final int grabberID1 = 0;
-        public static final int grabberID2 = 1;
+        public static final int grabberID1 = 1;
+        public static final int grabberID2 = 0;
 
         /* Jaw and Neck Distance and Angle Constants */
         public static final double downAngle = 0.0;
-        public static final double midAngle = 65.0;
+        public static final double midAngle = 70.0;
+        public static final double midLength = 0.75;
+        public static final double retractedLength = 0.05;
 
 
 

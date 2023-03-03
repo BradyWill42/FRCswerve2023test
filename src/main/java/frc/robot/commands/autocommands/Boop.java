@@ -4,38 +4,44 @@
 
 package frc.robot.commands.autocommands;
 
-import com.ctre.phoenix.time.StopWatch;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
+import frc.robot.SwerveModule;
 import frc.robot.subsystems.*;
 
 
 
-public class BalanceRobot extends CommandBase {
-  /** Creates a new BalanceRobot Command */
+public class Boop extends CommandBase {
+  /** Creates a new Boop Command. */
 
-  private Swerve drivetrain;
+  private BoopBoop booper;
+  private boolean boopEnabled;
   private Timer timer;
-  private double initAngle;
 
-  public BalanceRobot(Swerve drivetrain, double initAngle) {
+
+  public Boop(BoopBoop booper, boolean boopEnabled) {
+    this.booper = booper;
+    this.boopEnabled = boopEnabled;
     timer = new Timer();
-    this.initAngle = initAngle;
-    this.drivetrain = drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain);
+    addRequirements(booper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    booper.pump(false);
     timer.reset();
     timer.start();
   }
@@ -43,20 +49,13 @@ public class BalanceRobot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(isBalanced() == -1){
-      new AutoDrive(0.35 , drivetrain, false, true).execute();
-    } else if(isBalanced() == 1){
-      new AutoDrive(-0.35, drivetrain, false, true).execute();
-    } else {
-      SmartDashboard.putNumber("BalanceTimer", timer.get());
-      new AutoDrive(0, drivetrain, false, true).execute();
-    }
+    booper.pump(boopEnabled);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    new AutoDrive(0, drivetrain, false, true).execute();
+    booper.pump(false);
     timer.stop();
     timer.reset();
   }
@@ -65,26 +64,6 @@ public class BalanceRobot extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if(isBalanced() == 0 && timer.hasElapsed(1)){
-      return true;
-    } else {
-      return false;
-    }
-
-
+    return ((booper.isBooped() == boopEnabled) && (timer.hasElapsed(0.2)));
   }
-
-  public int isBalanced(){
-    if(drivetrain.getPitch() < (initAngle - 3)){
-        timer.reset();
-        return -1;
-    } else if(drivetrain.getPitch() > (initAngle + 3)){
-        timer.reset();
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 }

@@ -1,9 +1,13 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.commands.PlaceCone;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
+import frc.robot.commands.autocommands.Boop;
+import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.subsystems.BoopBoop;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Swerve;
@@ -46,7 +50,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class LeftSideAuto extends SequentialCommandGroup {
 
-    public LeftSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck){
+    public LeftSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck, Grabber grabber){
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
         PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverse", new PathConstraints(4, 3));
@@ -62,28 +66,48 @@ public class LeftSideAuto extends SequentialCommandGroup {
 
             new InstantCommand(() -> swerve.zeroGyro()),
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> jaw.resetjawEncoder()),
-                new InstantCommand(() -> neck.resetArmEncoders())
-            ),
+            new Boop(booper, false),
+            // new ParallelCommandGroup(
+            //     new InstantCommand(() -> jaw.resetjawEncoder()),
+            //     new InstantCommand(() -> neck.resetArmEncoders())
+            // ),
+
+            // new InstantCommand(() -> grabber.grab()),
+            // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength),
+            // new InstantCommand(() -> grabber.grab()),
+            // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.retractedLength),
+            new JawToAngle(jaw, Constants.Snake.midAngle),
+
+            new Boop(booper, true),
+            new WaitCommand(0.2),
+            new Boop(booper, false),
 
 
-            new ParallelCommandGroup(
-                new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle))
-            ),
+            // new InstantCommand(() -> booper.boop()),
+            // new WaitCommand(0.2),
+            // new InstantCommand(() -> booper.boop()),
 
             grabFirstConeSweep,
 
-            new InstantCommand(() -> booper.boop()),
-            new WaitCommand(0.01),
-            new InstantCommand(() -> booper.boop()),
+            new Boop(booper, true),
+            new WaitCommand(0.2),
+            new Boop(booper, false),
+
+            // new WaitCommand(0.2),
+            // new InstantCommand(() -> booper.boop()),
+            // new WaitCommand(0.2),
+            // new InstantCommand(() -> booper.boop()),
             
             grabSecondConeSweepCommand,
 
-            new InstantCommand(() -> booper.boop()),
-            new WaitCommand(0.01),
-            new InstantCommand(() -> booper.boop())
-
+            new Boop(booper, true),
+            new WaitCommand(0.2),
+            new Boop(booper, false)
+            
+            // new WaitCommand(0.2),
+            // new InstantCommand(() -> booper.boop()),
+            // new WaitCommand(0.2),
+            // new InstantCommand(() -> booper.boop())
         );
 
     }

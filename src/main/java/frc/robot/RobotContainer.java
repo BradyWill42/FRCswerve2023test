@@ -47,6 +47,8 @@ public class RobotContainer {
     /* Field Oriented Toggle */
     private boolean isFieldOriented = false;
 
+    /* Booper Toggle */
+    private boolean boopEnabled;
 
     /* Driver Buttons */
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
@@ -63,6 +65,9 @@ public class RobotContainer {
     private final JoystickButton toggleGrabber = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton setJawPosition = new JoystickButton(operator, XboxController.Button.kX.value);
+
+
+
 
 
     /* Subsystems */
@@ -117,7 +122,7 @@ public class RobotContainer {
         zeroOdometry.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
-        boop.onTrue(new InstantCommand(() -> booper.boop()));
+        boop.onTrue(new InstantCommand(() -> toggleBooper()));
 
         /* Operator Buttons */
         (neckOut.onTrue(new InstantCommand(() -> neck.neckOut())).or(neckIn.onTrue(new InstantCommand(() -> neck.neckIn())))).onFalse(new InstantCommand(() -> neck.neckOff()));
@@ -130,6 +135,18 @@ public class RobotContainer {
             )
         );
         setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle)));
+        int pov = operator.getPOV();
+        SmartDashboard.putNumber("POV Button", pov);
+
+        if(pov == 180){
+            // Mid position:
+            new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength);   
+        }
+        else if(pov == 0){
+            // Bottom position:
+            new PlaceCone(neck, jaw, Constants.Snake.downAngle, Constants.Snake.retractedLength);   
+        }
+
 
     }
 
@@ -137,13 +154,18 @@ public class RobotContainer {
         isFieldOriented = !isFieldOriented;
     }
 
+    public void toggleBooper(){
+        boopEnabled = !boopEnabled;
+        booper.pump(boopEnabled);
+    }
+
 
     public void initializeAutoChooser() {
         chooser.setDefaultOption("Nothing", new AutoTurn(180, s_Swerve, true, true));
 
-        chooser.addOption("Balance Auto", new BalanceAuto(s_Swerve));
+        chooser.addOption("Balance Auto", new BalanceAuto(s_Swerve, jaw, booper));
 
-        chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve, jaw, booper, neck));
+        chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve, jaw, booper, neck, grabber));
 
         chooser.addOption("Set Arm to 65 Degrees", new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle)));
 

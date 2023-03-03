@@ -64,7 +64,7 @@ public class Jaw extends SubsystemBase {
 
   public void setEncoderCoversions(){
     jawEncoder.setPositionConversionFactor((1.0 / Constants.Snake.jawGearRatio) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
-    jawEncoder.setVelocityConversionFactor(((1.0 / Constants.Snake.jawGearRatio) * 360) / 60.0);
+    jawEncoder.setVelocityConversionFactor(((1.0 / Constants.Snake.jawGearRatio) * 360.0) / 60.0);
   }
 
   public void resetMotors(){
@@ -95,8 +95,9 @@ public class Jaw extends SubsystemBase {
   }
 
   public void jawOff(){
-    currentPosition = jawEncoder.getPosition();
-    jawPIDController.setReference(currentPosition, ControlType.kPosition);
+    // currentPosition = jawEncoder.getPosition();
+    // jawPIDController.setReference(currentPosition, ControlType.kPosition);
+    jawMotor.set(0);
   }
 
   @Override

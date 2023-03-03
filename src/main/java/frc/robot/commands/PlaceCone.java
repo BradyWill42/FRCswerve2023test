@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autocommands.AutoDrive;
+import frc.robot.commands.autocommands.JawToAngle;
+import frc.robot.commands.autocommands.NeckToLength;
 import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 
@@ -18,8 +20,8 @@ public class PlaceCone extends ParallelCommandGroup{
     
     addCommands(
       new ParallelCommandGroup(
-        new InstantCommand(() -> neck.setNeckPosition(length)),
-        new InstantCommand(() -> jaw.setJawAngle(angle))
+        new JawToAngle(jaw, angle),
+        new NeckToLength(neck, length)
       )
     );
   }
