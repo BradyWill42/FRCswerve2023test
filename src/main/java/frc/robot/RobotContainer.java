@@ -36,6 +36,8 @@ public class RobotContainer {
     private final Joystick driver = new Joystick(0);
     private final Joystick operator = new Joystick(1);
 
+    private final XboxController operator2 = new XboxController(1);
+
     /* Autonomous Chooser */
     private SendableChooser<Command> chooser;
 
@@ -55,6 +57,7 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton boop = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton balance = new JoystickButton(driver, XboxController.Button.)
 
 
     /* Operator Buttons */
@@ -65,8 +68,12 @@ public class RobotContainer {
     private final JoystickButton toggleGrabber = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton setJawPosition = new JoystickButton(operator, XboxController.Button.kX.value);
+    
 
-    private final POVButton up = new POVButton(operator, 90);
+    private final JoystickButton midPos = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+    private final JoystickButton lowPos = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+    private final JoystickButton topPos = new JoystickButton(operator, XboxController.Button.kB.value);
+
 
 
 
@@ -112,7 +119,6 @@ public class RobotContainer {
         //Initialize Autonomous Chooser
         initializeAutoChooser();
 
-        SmartDashboard.putNumber("pov", operator.getPOV());
     }
 
     /**
@@ -140,7 +146,8 @@ public class RobotContainer {
         );
         setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle)));
         
-        SmartDashboard.putBoolean("UpPov", up.getAsBoolean());
+        // lowPos.onTrue(new PlaceCone(neck, jaw, Constants.Snake.downAngle, Constants.Snake.retractedLength));
+        // midPos.onTrue(new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength));
         
 
         // if(pov == 180){
