@@ -38,6 +38,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -48,39 +49,36 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
-public class LeftSideAuto extends SequentialCommandGroup {
+public class BarrierSideAuto extends SequentialCommandGroup {
 
-    public LeftSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck, Grabber grabber){
+    public BarrierSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck, Grabber grabber){
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-        PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverse", new PathConstraints(4, 3));
+        PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverseL", new PathConstraints(4.5, 5));
         Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
 
-        PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweep", new PathConstraints(4, 3));
+        PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweepL", new PathConstraints(4.5, 5));
         Command grabFirstConeSweep = swerve.followTrajectoryCommand(gFCS);
 
-        PathPlannerTrajectory gSCS = PathPlanner.loadPath("grabSecondConeSweep", new PathConstraints(4, 3));
+        PathPlannerTrajectory gSCS = PathPlanner.loadPath("grabSecondConeSweepL", new PathConstraints(4.5, 5));
         Command grabSecondConeSweepCommand = swerve.followTrajectoryCommand(gSCS);
+
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCR, DriverStation.getAlliance());
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gSCS, DriverStation.getAlliance());
+
         
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
-            new Boop(booper, false),
-            // new ParallelCommandGroup(
-            //     new InstantCommand(() -> jaw.resetjawEncoder()),
-            //     new InstantCommand(() -> neck.resetArmEncoders())
-            // ),
-
-            // new InstantCommand(() -> grabber.grab()),
-            // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength),
-            // new InstantCommand(() -> grabber.grab()),
-            // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.retractedLength),
-            new JawToAngle(jaw, Constants.Snake.midAngle),
-
+            new ParallelCommandGroup(
+                new InstantCommand(() -> grabber.grabThang(false)),
+                new JawToAngle(jaw, Constants.Snake.midAngle)
+            ),
+            new WaitCommand(0.1),
             new Boop(booper, true),
             new WaitCommand(0.2),
-            new Boop(booper, false),
 
 
             // new InstantCommand(() -> booper.boop()),
@@ -91,7 +89,6 @@ public class LeftSideAuto extends SequentialCommandGroup {
 
             new Boop(booper, true),
             new WaitCommand(0.2),
-            new Boop(booper, false),
 
             // new WaitCommand(0.2),
             // new InstantCommand(() -> booper.boop()),
@@ -101,8 +98,7 @@ public class LeftSideAuto extends SequentialCommandGroup {
             grabSecondConeSweepCommand,
 
             new Boop(booper, true),
-            new WaitCommand(0.2),
-            new Boop(booper, false)
+            new WaitCommand(0.2)
             
             // new WaitCommand(0.2),
             // new InstantCommand(() -> booper.boop()),

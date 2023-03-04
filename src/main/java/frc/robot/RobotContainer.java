@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.commands.autocommands.AutoDrive;
@@ -48,7 +48,7 @@ public class RobotContainer {
     private boolean isFieldOriented = false;
 
     /* Booper Toggle */
-    private boolean boopEnabled;
+    private boolean boopEnabled, grabEnabled;
 
     /* Driver Buttons */
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
@@ -65,6 +65,8 @@ public class RobotContainer {
     private final JoystickButton toggleGrabber = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton setJawPosition = new JoystickButton(operator, XboxController.Button.kX.value);
+
+    private final POVButton up = new POVButton(operator, 90);
 
 
 
@@ -109,6 +111,8 @@ public class RobotContainer {
 
         //Initialize Autonomous Chooser
         initializeAutoChooser();
+
+        SmartDashboard.putNumber("pov", operator.getPOV());
     }
 
     /**
@@ -127,7 +131,7 @@ public class RobotContainer {
         /* Operator Buttons */
         (neckOut.onTrue(new InstantCommand(() -> neck.neckOut())).or(neckIn.onTrue(new InstantCommand(() -> neck.neckIn())))).onFalse(new InstantCommand(() -> neck.neckOff()));
         (jawOpen.onTrue(new InstantCommand(() -> jaw.jawOpen())).or(jawClose.onTrue(new InstantCommand(() -> jaw.jawClose())))).onFalse(new InstantCommand(() -> jaw.jawOff()));
-        toggleGrabber.onTrue(new InstantCommand(() -> grabber.grab()));
+        toggleGrabber.onTrue(new InstantCommand(() -> toggleGrabber()));
         resetEncoders.onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> jaw.resetjawEncoder()),
@@ -135,17 +139,18 @@ public class RobotContainer {
             )
         );
         setJawPosition.onTrue(new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle)));
-        int pov = operator.getPOV();
-        SmartDashboard.putNumber("POV Button", pov);
+        
+        SmartDashboard.putBoolean("UpPov", up.getAsBoolean());
+        
 
-        if(pov == 180){
-            // Mid position:
-            new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength);   
-        }
-        else if(pov == 0){
-            // Bottom position:
-            new PlaceCone(neck, jaw, Constants.Snake.downAngle, Constants.Snake.retractedLength);   
-        }
+        // if(pov == 180){
+        //     // Mid position:
+        //     new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength);   
+        // }
+        // else if(pov == 0){
+        //     // Bottom position:
+        //     new PlaceCone(neck, jaw, Constants.Snake.downAngle, Constants.Snake.retractedLength);   
+        // }
 
 
     }
@@ -159,16 +164,24 @@ public class RobotContainer {
         booper.pump(boopEnabled);
     }
 
+    public void toggleGrabber(){
+        grabEnabled = !grabEnabled;
+        grabber.grabThang(grabEnabled);
+    }
+
 
     public void initializeAutoChooser() {
         chooser.setDefaultOption("Nothing", new AutoTurn(180, s_Swerve, true, true));
 
         chooser.addOption("Balance Auto", new BalanceAuto(s_Swerve, jaw, booper));
 
-        chooser.addOption("Score from Left Side", new LeftSideAuto(s_Swerve, jaw, booper, neck, grabber));
+        chooser.addOption("Score from Barrier Side", new BarrierSideAuto(s_Swerve, jaw, booper, neck, grabber));
+
+        chooser.addOption("Score from Wall Side", new WallSideAuto(s_Swerve, jaw, booper, neck, grabber));
 
         chooser.addOption("Set Arm to 65 Degrees", new InstantCommand(() -> jaw.setJawAngle(Constants.Snake.midAngle)));
 
+        chooser.addOption("Boop Test", new BoopAuto(booper, grabber, jaw));
         // chooser.addOption("Score from Right Side", getAutonomousCommand());
 
         SmartDashboard.putData(chooser);

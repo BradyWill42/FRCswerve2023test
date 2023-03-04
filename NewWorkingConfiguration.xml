@@ -1,13 +1,17 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="POV Button" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="10" y="564"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="459" y="61"/>
+		<location x="418" y="80"/>
 		<width>607</width>
 		<height>463</height>
+		<property name="Degrees Rotation" value="135"/>
 		<property name="Camera Choice" value=""/>
 	</static-widget>
 	<widget field="SendableChooser[0]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="0" y="560"/>
+		<location x="1" y="589"/>
 	</widget>
 	<widget field="Mod 3 Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="0" y="540"/>

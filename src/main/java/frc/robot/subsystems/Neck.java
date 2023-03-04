@@ -55,8 +55,8 @@ public class Neck extends SubsystemBase {
     resetMotors();
 
     // brake.set(DoubleSolenoid.Value.kForward);
-    brakeEnabled.set(true);
-    brakeDisabled.set(false);
+    brakeEnabled.set(false);
+    brakeDisabled.set(true);
 
     setEncoderCoversions();
   }
@@ -121,12 +121,15 @@ public class Neck extends SubsystemBase {
   }
   
   public void neckOut() {
+      enableBrakes(false);
       leftNeckMotor.set(.7);
       rightNeckMotor.set(.7);
   }
 
   public void neckIn() {
     //if(leftNeckEncoder.getDistance() > minPosition){
+      enableBrakes(false);
+
       leftNeckMotor.set(-.7);
       rightNeckMotor.set(-.7);
     //}

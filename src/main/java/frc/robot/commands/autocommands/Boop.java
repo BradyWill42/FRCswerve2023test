@@ -56,6 +56,7 @@ public class Boop extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     booper.pump(false);
+    new WaitCommand(0.2);
     timer.stop();
     timer.reset();
   }
@@ -64,6 +65,6 @@ public class Boop extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((booper.isBooped() == boopEnabled) && (timer.hasElapsed(0.2)));
+    return ((booper.isBooped() == boopEnabled) && timer.hasElapsed(0.2));
   }
 }

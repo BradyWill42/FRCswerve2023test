@@ -153,8 +153,8 @@ public final class Constants {
         public static final double jawGearRatio = (100.0 / 1.0);
 
         /* Pneumatics Constants */
-        public static final int brakeID1 = 7;
-        public static final int brakeID2 = 6;
+        public static final int brakeID1 = 6;
+        public static final int brakeID2 = 7;
 
         public static final int boopID1 = 9;
         public static final int boopID2 = 8;

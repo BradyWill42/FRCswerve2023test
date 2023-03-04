@@ -97,6 +97,7 @@ public class Jaw extends SubsystemBase {
   public void jawOff(){
     // currentPosition = jawEncoder.getPosition();
     // jawPIDController.setReference(currentPosition, ControlType.kPosition);
+    jawPIDController.setReference(0, ControlType.kSmartVelocity);
     jawMotor.set(0);
   }
 
