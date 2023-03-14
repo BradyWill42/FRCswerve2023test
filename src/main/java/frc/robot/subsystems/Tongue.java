@@ -19,9 +19,9 @@ public class Tongue extends SubsystemBase {
   
   /** Creates a new Climber. */
   public Tongue() {
-    // tongue = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, Constants.Snake.boopID1, Constants.Snake.boopID2); 
-    thrustTongue = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID1);
-    pullOutTongue = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.boopID2);
+    // tongue = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.Snake.boopID1, Constants.Snake.boopID2); 
+    thrustTongue = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.boopID1);
+    pullOutTongue = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.boopID2);
 
     lick(false);
     // tongue.set(DoubleSolenoid.Value.kForward);

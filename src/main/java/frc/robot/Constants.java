@@ -153,17 +153,18 @@ public final class Constants {
         public static final double jawGearRatio = (100.0 / 1.0);
 
         /* Pneumatics Constants */
-        public static final int brakeID1 = 6;
-        public static final int brakeID2 = 7;
+        public static final int brakeID1 = 2;
+        public static final int brakeID2 = 3;
 
-        public static final int boopID1 = 9;
-        public static final int boopID2 = 8;
+        public static final int boopID1 = 0;
+        public static final int boopID2 = 1;
 
-        public static final int grabberID1 = 1;
-        public static final int grabberID2 = 0;
+        public static final int grabberID1 = 7;
+        public static final int grabberID2 = 6;
 
         /* Jaw and Neck Distance and Angle Constants */
         public static final double downAngle = 0.0;
+        public static final double autoAngle = 45.0;
         public static final double midAngle = 70.0;
         public static final double midLength = 0.75;
         public static final double retractedLength = 0.05;

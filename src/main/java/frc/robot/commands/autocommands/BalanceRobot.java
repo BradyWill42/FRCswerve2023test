@@ -66,7 +66,7 @@ public class BalanceRobot extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if(isBalanced() == 0 && timer.hasElapsed(1)){
+    if(isBalanced() == 0 && timer.hasElapsed(2)){
       return true;
     } else {
       return false;

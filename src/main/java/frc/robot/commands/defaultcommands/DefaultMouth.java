@@ -14,26 +14,25 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Tongue;
 
-public class DefaultHead extends CommandBase {
+public class DefaultMouth extends CommandBase {
   
   private Jaw jaw;
   private Neck neck;
   private Tongue tongue;
   private Grabber grabber;
-  private BooleanSupplier neckIn, neckOut, jawOpen, jawClose;
+  private BooleanSupplier lick, grabCone, grabCube;
 
-  public DefaultHead(BooleanSupplier neckIn, BooleanSupplier neckOut, BooleanSupplier jawOpen, BooleanSupplier jawClose, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
+  public DefaultMouth(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
     this.jaw = jaw;
     this.neck = neck;
     this.tongue = tongue;
     this.grabber = grabber;
 
-    addRequirements(jaw, neck);
+    addRequirements(tongue, grabber);
 
-    this.neckIn = neckIn;
-    this.neckOut = neckOut;
-    this.jawOpen = jawOpen;
-    this.jawClose = jawClose;
+    this.lick = lick;
+    this.grabCone = grabCone;
+    this.grabCube = grabCube;
   }
 
   
@@ -43,33 +42,19 @@ public class DefaultHead extends CommandBase {
   
   @Override
   public void execute() {
-    if(neckIn.getAsBoolean() && jaw.getJawAngle() > 45) {
-        neck.neckIn();
+    if(jaw.getJawAngle() > 30){
+        tongue.lick(lick.getAsBoolean());
     }
-    else if (neckOut.getAsBoolean() && jaw.getJawAngle() > 45) {
-        neck.neckOut();
+    if(!tongue.isLicked()){
+        grabber.grabThang(!grabCone.getAsBoolean());
     }
-    else {
-      neck.neckOff();
-    }
-
-    if(jawOpen.getAsBoolean()) {
-      jaw.jawOpen();
-    }
-    else if(jawClose.getAsBoolean() && !tongue.isLicked()) {
-        jaw.jawClose();
-    }
-    else {
-      jaw.jawOff();
+    if(!tongue.isLicked()){
+        grabber.grabThang(!grabCube.getAsBoolean());
     }
   }
-
   
   @Override
-  public void end(boolean interrupted) {
-    jaw.jawOff();
-    neck.neckOff();
-  }
+  public void end(boolean interrupted) {}
 
   
   @Override

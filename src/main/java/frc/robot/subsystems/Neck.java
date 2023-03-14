@@ -44,9 +44,9 @@ public class Neck extends SubsystemBase {
   public Neck() {
     leftNeckMotor = new CANSparkMax(Constants.Snake.leftNeckMotorID,  MotorType.kBrushless);
     rightNeckMotor = new CANSparkMax(Constants.Snake.rightNeckMotorID,  MotorType.kBrushless);
-    // brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
-    brakeEnabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID1);
-    brakeDisabled = new Solenoid(PneumaticsModuleType.REVPH, Constants.Snake.brakeID2);
+    // brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
+    brakeEnabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID1);
+    brakeDisabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID2);
     
     leftNeckEncoder = new Encoder(Constants.Snake.leftNeckEncoderID1, Constants.Snake.leftNeckEncoderID2);
     rightNeckEncoder = new Encoder(Constants.Snake.rightNeckEncoderID1, Constants.Snake.rightNeckEncoderID2);
@@ -122,16 +122,16 @@ public class Neck extends SubsystemBase {
   
   public void neckOut() {
       enableBrakes(false);
-      leftNeckMotor.set(.7);
-      rightNeckMotor.set(.7);
+      leftNeckMotor.set(.8);
+      rightNeckMotor.set(.8);
   }
 
   public void neckIn() {
     //if(leftNeckEncoder.getDistance() > minPosition){
       enableBrakes(false);
 
-      leftNeckMotor.set(-.7);
-      rightNeckMotor.set(-.7);
+      leftNeckMotor.set(-.8);
+      rightNeckMotor.set(-.8);
     //}
   }
   public void rightNeckIn(){

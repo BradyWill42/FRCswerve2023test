@@ -1,16 +1,15 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
-import frc.robot.commands.PlaceCone;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
-import frc.robot.commands.autocommands.Boop;
+import frc.robot.commands.autocommands.Lick;
 import frc.robot.commands.autocommands.JawToAngle;
-import frc.robot.subsystems.BoopBoop;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Tongue;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +50,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class WallSideAuto extends SequentialCommandGroup {
 
-    public WallSideAuto(Swerve swerve, Jaw jaw, BoopBoop booper, Neck neck, Grabber grabber){
+    public WallSideAuto(Swerve swerve, Jaw jaw, Tongue tongue, Neck neck, Grabber grabber){
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
         // PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverseR", new PathConstraints(4, 3));
@@ -71,7 +70,7 @@ public class WallSideAuto extends SequentialCommandGroup {
 
             new InstantCommand(() -> swerve.zeroGyro()),
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
-            new Boop(booper, false),
+            new Lick(tongue, false),
             // new ParallelCommandGroup(
             //     new InstantCommand(() -> jaw.resetjawEncoder()),
             //     new InstantCommand(() -> neck.resetArmEncoders())
@@ -83,36 +82,36 @@ public class WallSideAuto extends SequentialCommandGroup {
             // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.retractedLength),
             new JawToAngle(jaw, Constants.Snake.midAngle),
 
-            new Boop(booper, true),
+            new Lick(tongue, true),
             new WaitCommand(0.2),
-            new Boop(booper, false),
+            new Lick(tongue, false),
 
 
-            // new InstantCommand(() -> booper.boop()),
+            // new InstantCommand(() -> tongue.boop()),
             // new WaitCommand(0.2),
-            // new InstantCommand(() -> booper.boop()),
+            // new InstantCommand(() -> tongue.boop()),
 
             grabFirstConeSweep,
 
-            new Boop(booper, true),
+            new Lick(tongue, true),
             new WaitCommand(0.2),
-            new Boop(booper, false),
+            new Lick(tongue, false),
 
             // new WaitCommand(0.2),
-            // new InstantCommand(() -> booper.boop()),
+            // new InstantCommand(() -> tongue.boop()),
             // new WaitCommand(0.2),
-            // new InstantCommand(() -> booper.boop()),
+            // new InstantCommand(() -> tongue.boop()),
             
             grabSecondConeSweepCommand,
 
-            new Boop(booper, true),
+            new Lick(tongue, true),
             new WaitCommand(0.2),
-            new Boop(booper, false)
+            new Lick(tongue, false)
             
             // new WaitCommand(0.2),
-            // new InstantCommand(() -> booper.boop()),
+            // new InstantCommand(() -> tongue.boop()),
             // new WaitCommand(0.2),
-            // new InstantCommand(() -> booper.boop())
+            // new InstantCommand(() -> tongue.boop())
         );
 
     }
