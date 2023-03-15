@@ -169,7 +169,10 @@ public final class Constants {
         public static final double midLength = 0.75;
         public static final double retractedLength = 0.05;
 
+        /* Limelight Constants */
 
+        public static final double limelightAngle = 45.0;
+        public static final double limelightHeight = 0; 
 
         /* Jaw PID Constants */
         public static final double jawPP = 0.012744;

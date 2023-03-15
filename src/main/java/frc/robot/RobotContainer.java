@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.simulation.JoystickSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +30,7 @@ import frc.robot.autos.*;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
 import frc.robot.commands.autocommands.BalanceRobot;
+import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.commands.defaultcommands.DefaultHead;
 import frc.robot.commands.defaultcommands.DefaultMouth;
 import frc.robot.commands.defaultcommands.DefaultSwerve;
@@ -60,6 +62,8 @@ public class RobotContainer {
     private int leftTriggerAxis = XboxController.Axis.kLeftTrigger.value;
     private int rightTriggerAxis = XboxController.Axis.kRightTrigger.value;
 
+    
+
     /* Field Oriented Toggle */
     private boolean isFieldOriented = false;
 
@@ -70,18 +74,16 @@ public class RobotContainer {
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
-    // private final JoystickButton boop = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    // private final JoystickButton balance = new JoystickButton(driver, XboxController.Button.)
-
 
     /* Operator Buttons */
-    private final JoystickButton neckOut = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-    private final JoystickButton neckIn = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton coneGrabButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton cubeGrabButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     private final JoystickButton jawOpen = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton jawClose = new JoystickButton(operator, XboxController.Button.kBack.value);
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value); 
     private final JoystickButton tongueLick = new JoystickButton(operator, XboxController.Button.kB.value);
-
+    private final JoystickButton jawToScore = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton jawToClose = new JoystickButton(operator, XboxController.Button.kA.value);
 
 
     /* Subsystems */
@@ -103,14 +105,6 @@ public class RobotContainer {
             rotationAxis = 0;
         }      
         
-        if(leftTriggerAxis < Math.abs(0.1)){
-            leftTriggerAxis = 0;
-        }
-        if(rightTriggerAxis < Math.abs(0.1)){
-            rightTriggerAxis = 0;
-        }        
-        
-
         swerve.setDefaultCommand(
             new DefaultSwerve(
                 swerve, 
@@ -123,50 +117,26 @@ public class RobotContainer {
 
         jaw.setDefaultCommand(
             new DefaultHead(
-                () -> neckIn.getAsBoolean(), 
-                () -> neckOut.getAsBoolean(), 
+                () -> operator.getRawAxis(rightTriggerAxis), 
+                () -> operator.getRawAxis(leftTriggerAxis), 
                 () -> jawOpen.getAsBoolean(), 
                 () -> jawClose.getAsBoolean(), 
                 jaw, 
                 neck, 
                 tongue, 
                 grabber
-            )
-        );
-        neck.setDefaultCommand(
-            new DefaultHead(
-                () -> neckIn.getAsBoolean(), 
-                () -> neckOut.getAsBoolean(), 
-                () -> jawOpen.getAsBoolean(), 
-                () -> jawClose.getAsBoolean(), 
-                jaw, 
-                neck, 
-                tongue, 
-                grabber
-            )
+                )
         );
         grabber.setDefaultCommand(
             new DefaultMouth(
                 () -> lick, 
                 () -> coneGrab, 
                 () -> cubeGrab, 
-                jaw, 
-                neck, 
+                jaw,  
                 tongue, 
                 grabber
-            )
-        );
-        tongue.setDefaultCommand(
-            new DefaultMouth(
-                () -> lick, 
-                () -> coneGrab, 
-                () -> cubeGrab, 
-                jaw, 
-                neck, 
-                tongue, 
-                grabber
-            )
-        );     
+                )
+        );        
 
     
         //Initalize Autonomous Chooser
@@ -192,10 +162,14 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
 
-
-
         /* Operator Buttons */
         tongueLick.toggleOnTrue(new InstantCommand(() -> toggleLicker()));
+        coneGrabButton.toggleOnTrue(new InstantCommand(() -> toggleGrabCone()));
+        cubeGrabButton.toggleOnTrue(new InstantCommand(() -> toggleGrabCube()));
+
+        jawToScore.onTrue(new JawToAngle(jaw, Constants.Snake.midAngle));
+        jawToClose.onTrue(new JawToAngle(jaw, Constants.Snake.downAngle));
+
 
         resetEncoders.onTrue(
             new ParallelCommandGroup(
@@ -212,12 +186,10 @@ public class RobotContainer {
 
     public void toggleLicker(){
         lick = !lick;
-        // tongue.lick(lick);
     }
 
     public void toggleGrabCone(){
         coneGrab = !coneGrab;
-        // grabber.grabThang(coneGrab);
     }
 
     public void toggleGrabCube(){

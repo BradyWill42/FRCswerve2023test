@@ -5,9 +5,11 @@
 package frc.robot.commands.defaultcommands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import javax.swing.plaf.ToolBarUI;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Jaw;
@@ -17,16 +19,18 @@ import frc.robot.subsystems.Tongue;
 public class DefaultMouth extends CommandBase {
   
   private Jaw jaw;
-  private Neck neck;
   private Tongue tongue;
   private Grabber grabber;
   private BooleanSupplier lick, grabCone, grabCube;
 
-  public DefaultMouth(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
+  public DefaultMouth(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Jaw jaw, Tongue tongue, Grabber grabber) {
     this.jaw = jaw;
-    this.neck = neck;
     this.tongue = tongue;
     this.grabber = grabber;
+
+
+    // this.leftAxis = leftAxis;
+    // this.rightAxis = rightAxis;
 
     addRequirements(tongue, grabber);
 
@@ -55,7 +59,6 @@ public class DefaultMouth extends CommandBase {
   
   @Override
   public void end(boolean interrupted) {}
-
   
   @Override
   public boolean isFinished() {
