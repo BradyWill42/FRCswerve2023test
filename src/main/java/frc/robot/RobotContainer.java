@@ -131,7 +131,19 @@ public class RobotContainer {
                 neck, 
                 tongue, 
                 grabber
-                )
+            )
+        );
+        neck.setDefaultCommand(
+            new DefaultHead(
+                () -> neckIn.getAsBoolean(), 
+                () -> neckOut.getAsBoolean(), 
+                () -> jawOpen.getAsBoolean(), 
+                () -> jawClose.getAsBoolean(), 
+                jaw, 
+                neck, 
+                tongue, 
+                grabber
+            )
         );
         grabber.setDefaultCommand(
             new DefaultMouth(
@@ -142,8 +154,19 @@ public class RobotContainer {
                 neck, 
                 tongue, 
                 grabber
-                )
-        );        
+            )
+        );
+        tongue.setDefaultCommand(
+            new DefaultMouth(
+                () -> lick, 
+                () -> coneGrab, 
+                () -> cubeGrab, 
+                jaw, 
+                neck, 
+                tongue, 
+                grabber
+            )
+        );     
 
     
         //Initalize Autonomous Chooser
