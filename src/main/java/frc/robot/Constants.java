@@ -162,17 +162,22 @@ public final class Constants {
         public static final int grabberID1 = 7;
         public static final int grabberID2 = 6;
 
+        public static final int grabber30ID1 = 4;
+        public static final int grabber30ID2 = 5;
+
         /* Jaw and Neck Distance and Angle Constants */
         public static final double downAngle = 0.0;
         public static final double autoAngle = 45.0;
-        public static final double midAngle = 70.0;
+        public static final double midAngle = 60.0;
         public static final double midLength = 0.75;
         public static final double retractedLength = 0.05;
 
         /* Limelight Constants */
 
         public static final double limelightAngle = 45.0;
-        public static final double limelightHeight = 0; 
+        public static final double limelightHeight = 0.338;
+        public static final double midPoleHeight = 0.87;
+        public static final double highPoleHeight = 1.17;
 
         /* Jaw PID Constants */
         public static final double jawPP = 0.012744;

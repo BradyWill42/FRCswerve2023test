@@ -73,7 +73,7 @@ public class BarrierSideAuto extends SequentialCommandGroup {
             new InstantCommand(() -> swerve.zeroGyro()),
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
             new ParallelCommandGroup(
-                new InstantCommand(() -> grabber.grabThang(false)),
+                // new InstantCommand(() -> grabber.grabThang(false)),
                 new JawToAngle(jaw, Constants.Snake.autoAngle)
             ),
             new WaitCommand(0.1),

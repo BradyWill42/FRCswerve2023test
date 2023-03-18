@@ -16,14 +16,14 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Tongue;
 
-public class DefaultMouth extends CommandBase {
+public class DefaultTongue extends CommandBase {
   
   private Tongue tongue;
   private Grabber grabber;
   private BooleanSupplier lick, grabCone, grabCube;
   private boolean psi_60, psi_30;
 
-  public DefaultMouth(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber) {
+  public DefaultTongue(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber) {
     this.tongue = tongue;
     this.grabber = grabber;
     // this.changePressure = changePressure;
@@ -32,7 +32,7 @@ public class DefaultMouth extends CommandBase {
     // this.leftAxis = leftAxis;
     // this.rightAxis = rightAxis;
 
-    addRequirements(tongue, grabber);//, grabber);
+    addRequirements(tongue);//, grabber);
 
     this.lick = lick;
     this.grabCone = grabCone;
@@ -56,7 +56,8 @@ public class DefaultMouth extends CommandBase {
     SmartDashboard.putString("Can Grab", canGrab);
     SmartDashboard.putBoolean("Grab Cone", grabCone.getAsBoolean());
 
-    SmartDashboard.putBoolean("lick", lick.getAsBoolean());
+    // SmartDashboard.putBoolean("lick", lick.getAsBoolean());
+    SmartDashboard.putBoolean("DefaultTongue", true);
     
     // if(grabCone.getAsBoolean()){
     //   psi_60 = true;
@@ -66,13 +67,13 @@ public class DefaultMouth extends CommandBase {
     //   psi_60 = false;
     // }
     
-    // tongue.lick(lick.getAsBoolean());
+        tongue.lick(lick.getAsBoolean());
     
-    if(!tongue.isLicked()){
-      grabber.grabThang(grabCone.getAsBoolean());
-    }
+    // if(!tongue.isLicked()){
+    //   grabber.grabThang(grabCone.getAsBoolean());
+    // }
 
-    grabber.switchPressure(grabCube.getAsBoolean());
+    // grabber.switchPressure(grabCube.getAsBoolean());
   }
 
 

@@ -4,6 +4,7 @@ import frc.robot.Constants;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
 import frc.robot.commands.autocommands.Lick;
+import frc.robot.commands.autocommands.NeckToLength;
 import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.subsystems.Tongue;
 import frc.robot.subsystems.Grabber;
@@ -66,12 +67,18 @@ public class DriveForward extends SequentialCommandGroup {
             new InstantCommand(() -> swerve.zeroGyro()),
             new InstantCommand(() -> swerve.resetOdometry(new Pose2d(dF.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
             new ParallelCommandGroup(
-                new InstantCommand(() -> grabber.grabThang(false)),
-                new JawToAngle(jaw, Constants.Snake.autoAngle)
+                new NeckToLength(neck, 0.75),
+                new JawToAngle(jaw, Constants.Snake.midAngle)
             ),
-            new WaitCommand(0.1),
-            new Lick(tongue, true),
+            //new InstantCommand(() -> grabber.grabPressure(false, false)),
+            // new WaitCommand(0.1),
+            // new Lick(tongue, true),
             new WaitCommand(0.2),
+
+            new ParallelCommandGroup(
+                new NeckToLength(neck, 0.05),
+                new JawToAngle(jaw, Constants.Snake.downAngle)
+            ),
 
             driveForwardCommand
 

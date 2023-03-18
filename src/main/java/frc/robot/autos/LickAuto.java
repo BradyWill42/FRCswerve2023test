@@ -55,7 +55,7 @@ public class LickAuto extends SequentialCommandGroup {
 
         addCommands(
             new ParallelCommandGroup(
-                new InstantCommand(() -> grabber.grabThang(false)),
+                // new InstantCommand(() -> grabber.grabThang(false)),
                 new JawToAngle(jaw, Constants.Snake.midAngle)
             ),
             new WaitCommand(0.2),

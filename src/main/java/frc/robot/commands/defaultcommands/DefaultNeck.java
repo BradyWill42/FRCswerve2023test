@@ -16,58 +16,59 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Tongue;
 
-public class DefaultHead extends CommandBase {
+public class DefaultNeck extends CommandBase {
   
   private Jaw jaw;
   private Neck neck;
   private Tongue tongue;
   private Grabber grabber;
-  private BooleanSupplier jawOpen, jawClose;
-  private double currentAngle;
 
-  public DefaultHead(BooleanSupplier jawOpen, BooleanSupplier jawClose, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
-    this.jaw = jaw;
+  private double currentAngle;
+  private DoubleSupplier neckIn, neckOut;
+
+  public DefaultNeck(DoubleSupplier neckIn, DoubleSupplier neckOut, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
     this.neck = neck;
     this.tongue = tongue;
     this.grabber = grabber;
+    this.neckIn = neckIn;
+    this.neckOut = neckOut;
 
-    addRequirements(jaw, tongue);
+    addRequirements(neck);
 
-
-    this.jawOpen = jawOpen;
-    this.jawClose = jawClose;
   }
 
   
   @Override
   public void initialize() {
-    currentAngle = jaw.getJawAngle();
+    // currentAngle = jaw.getJawAngle();
   }
 
   
   @Override
   public void execute() {
-    // if(neckIn.getAsDouble() > 0.1 && jaw.getJawAngle() > 45) {
-    //     neck.neckIn();
-    // }
-    // else if (neckOut.getAsDouble() > 0.1 && jaw.getJawAngle() > 45) {
-    //     neck.neckOut();
-    // }
-    // else {
-    //   neck.neckOff();
-    // }
-
-    if(jawOpen.getAsBoolean()) {
-      currentAngle = jaw.getJawAngle();
-      jaw.jawOpen();
+    if(neckIn.getAsDouble() > 0.1) {
+        neck.neckIn();
     }
-    else if(jawClose.getAsBoolean() && !tongue.isLicked()) {
-      currentAngle = jaw.getJawAngle();
-      jaw.jawClose();
+    else if (neckOut.getAsDouble() > 0.1) {
+        neck.neckOut();
     }
     else {
-      jaw.setJawAngle(currentAngle);
+      neck.neckOff();
     }
+
+    // if(jawOpen.getAsBoolean()) {
+    //   currentAngle = jaw.getJawAngle();
+    //   jaw.jawOpen();
+    // }
+    // else if(jawClose.getAsBoolean() && !tongue.isLicked()) {
+    //   currentAngle = jaw.getJawAngle();
+    //   jaw.jawClose();
+    // }
+    // else {
+    //   jaw.setJawAngle(currentAngle);
+    // }
+
+    // SmartDashboard.putBoolean("defaultNeck", true);
   
   }
 
