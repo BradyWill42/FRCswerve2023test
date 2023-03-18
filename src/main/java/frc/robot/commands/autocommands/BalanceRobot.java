@@ -23,11 +23,11 @@ public class BalanceRobot extends CommandBase {
 
   private Swerve drivetrain;
   private Timer timer;
-  private double initAngle;
+  private double initRoll;
 
-  public BalanceRobot(Swerve drivetrain, double initAngle) {
+  public BalanceRobot(Swerve drivetrain, double initRoll) {
     timer = new Timer();
-    this.initAngle = initAngle;
+    this.initRoll = initRoll;
     this.drivetrain = drivetrain;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -44,9 +44,9 @@ public class BalanceRobot extends CommandBase {
   @Override
   public void execute() {
     if(isBalanced() == -1){
-      new AutoDrive(0.35 , drivetrain, false, true).execute();
+      new AutoDrive(0.38 , drivetrain, false, true).execute();
     } else if(isBalanced() == 1){
-      new AutoDrive(-0.35, drivetrain, false, true).execute();
+      new AutoDrive(-0.38, drivetrain, false, true).execute();
     } else {
       SmartDashboard.putNumber("BalanceTimer", timer.get());
       new AutoDrive(0, drivetrain, false, true).execute();
@@ -76,12 +76,12 @@ public class BalanceRobot extends CommandBase {
   }
 
   public int isBalanced(){
-    if(drivetrain.getPitch() < (initAngle - 3)){
-        timer.reset();
-        return -1;
-    } else if(drivetrain.getPitch() > (initAngle + 3)){
+    if(drivetrain.getRoll() < (initRoll - 3)){
         timer.reset();
         return 1;
+    } else if(drivetrain.getRoll() > (initRoll + 3)){
+        timer.reset();
+        return -1;
     } else {
         return 0;
     }

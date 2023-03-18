@@ -23,14 +23,13 @@ public class Grabber extends SubsystemBase {
   /** Creates a new Climber. */
   public Grabber() {
     gorillaGripper = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, Constants.Snake.grabberID1, Constants.Snake.grabberID2); 
-    pressureChanger = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, Constants.Snake.grabber30ID1, Constants.Snake.grabber30ID2); 
+    pressureChanger = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, Constants.Snake.changePressureID1, Constants.Snake.changePressureID2); 
 
     // grab = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.grabberID1);
     // release = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.grabberID2);
 
-    // grabThang(false);
-    gorillaGripper.set(Value.kForward);
-    pressureChanger.set(Value.kForward);
+    grabThang(false);
+    switchPressure(true);
   }
 
   public void grabThang(boolean toGrab){
@@ -42,31 +41,6 @@ public class Grabber extends SubsystemBase {
     } 
   }
 
-  // public void grabPressure(boolean grabIt, boolean psi_60){
-    
-  //   SmartDashboard.putBoolean("Grab It Boolean", grabIt);
-
-  //   if(psi_60){
-  //     pressureChanger.set(Value.kForward);
-  //     if(grabIt){
-  //       gorillaGripper.set(Value.kForward);
-  //     } 
-  //     if(!grabIt){
-  //       gorillaGripper.set(Value.kReverse);
-  //     }
-  //   } 
-
-  //   if(!psi_60){
-  //     pressureChanger.set(Value.kReverse);
-  //     if(grabIt){
-  //       gorillaGripper.set(Value.kForward);
-  //     } 
-  //     if(!grabIt){
-  //       gorillaGripper.set(Value.kReverse);
-  //     }
-  //   }
-  // }
-
   public void switchPressure(boolean toGrab30){
     if(toGrab30){
       pressureChanger.set(Value.kForward);
@@ -76,28 +50,6 @@ public class Grabber extends SubsystemBase {
       pressureChanger.set(Value.kOff);
     }
   }
-
-
-  // public void grab60(boolean toGrab){
-  //   pressureChanger.set(Value.kForward);
-  //   // if(toGrab){
-  //   //   gorillaGripper.set(Value.kForward);
-  //   // } 
-  //   // if(!toGrab){
-  //   //   gorillaGripper.set(Value.kReverse);
-  //   // } 
-  // }
-
-  // public void grab30(boolean toGrab){
-  //   pressureChanger.set(Value.kReverse);
-  //   // if(toGrab){
-  //   //   gorillaGripper.set(Value.kForward);
-  //   // } 
-  //   // if(!toGrab){
-  //   //   gorillaGripper.set(Value.kReverse);
-  //   // } 
-  // }
-
 
 
   @Override

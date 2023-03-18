@@ -144,8 +144,8 @@ public class Swerve extends SubsystemBase {
         gyro.zeroYaw();
     }
 
-    public double getPitch() {
-        return gyro.getPitch();
+    public double getRoll() {
+        return gyro.getRoll();
     }
 
     public Rotation2d getYaw() {
@@ -170,7 +170,7 @@ public class Swerve extends SubsystemBase {
 
         }
 
-        SmartDashboard.putNumber("Gyro Pitch", getPitch());
+        SmartDashboard.putNumber("Gyro Roll", getRoll());
 
         SmartDashboard.putNumber("Gyro Angle", getYaw().getDegrees());
     }

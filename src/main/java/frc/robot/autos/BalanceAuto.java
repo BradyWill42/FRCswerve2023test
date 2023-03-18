@@ -22,7 +22,7 @@ public class BalanceAuto extends SequentialCommandGroup{
     public BalanceAuto(Swerve swerve, Jaw jaw, Tongue tongue){
         swerve.zeroGyro();
         swerve.resetOdometry(new Pose2d());
-        double initAngle = swerve.getPitch();
+        double initAngle = swerve.getRoll();
 
         addRequirements(swerve, jaw, tongue);
 
@@ -31,7 +31,6 @@ public class BalanceAuto extends SequentialCommandGroup{
             new Lick(tongue, true),
             new AutoDrive(-3, swerve, true, true),
             new AutoDrive(-5.2, swerve, true, false),
-            new AutoTurn(180, swerve, true, true),
             new AutoDrive(3, swerve, true, true),
             new BalanceRobot(swerve, initAngle)
         );

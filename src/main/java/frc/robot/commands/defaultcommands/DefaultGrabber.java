@@ -16,14 +16,14 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Tongue;
 
-public class DefaultMouth extends CommandBase {
+public class DefaultGrabber extends CommandBase {
   
   private Tongue tongue;
   private Grabber grabber;
   private BooleanSupplier lick, grabCone, grabCube;
   private boolean psi_60, psi_30;
 
-  public DefaultMouth(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber) {
+  public DefaultGrabber(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber) {
     this.tongue = tongue;
     this.grabber = grabber;
     // this.changePressure = changePressure;
@@ -32,7 +32,7 @@ public class DefaultMouth extends CommandBase {
     // this.leftAxis = leftAxis;
     // this.rightAxis = rightAxis;
 
-    addRequirements(tongue, grabber);//, grabber);
+    addRequirements(grabber);//, grabber);
 
     this.lick = lick;
     this.grabCone = grabCone;
@@ -77,7 +77,9 @@ public class DefaultMouth extends CommandBase {
 
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    grabber.grabThang(false);
+  }
   
   @Override
   public boolean isFinished() {

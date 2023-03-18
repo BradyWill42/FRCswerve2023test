@@ -56,29 +56,31 @@ public class DriveForward extends SequentialCommandGroup {
         
 
         PathPlannerTrajectory dF = PathPlanner.loadPath("driveForward", new PathConstraints(3, 3));
+        
+        PathPlannerTrajectory.transformTrajectoryForAlliance(dF, DriverStation.getAlliance());
+
         Command driveForwardCommand = swerve.followTrajectoryCommand(dF);
 
-        PathPlannerTrajectory.transformTrajectoryForAlliance(dF, DriverStation.getAlliance());
+        SmartDashboard.putNumber("Initial Rotation", dF.getInitialHolonomicPose().getRotation().getDegrees());
+        
         
 
         
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
-            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(dF.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
-            new ParallelCommandGroup(
-                new NeckToLength(neck, 0.75),
-                new JawToAngle(jaw, Constants.Snake.midAngle)
-            ),
-            //new InstantCommand(() -> grabber.grabPressure(false, false)),
-            // new WaitCommand(0.1),
-            // new Lick(tongue, true),
+            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(dF.getInitialPose().getTranslation(), dF.getInitialHolonomicPose().getRotation()))),
+            
+            
+            new InstantCommand(() -> grabber.grabThang(false)),
             new WaitCommand(0.2),
 
             new ParallelCommandGroup(
-                new NeckToLength(neck, 0.05),
-                new JawToAngle(jaw, Constants.Snake.downAngle)
+                new JawToAngle(jaw, Constants.Snake.midAngle)
             ),
+                    
+            new Lick(tongue, true),
+            new WaitCommand(0.2),
 
             driveForwardCommand
 

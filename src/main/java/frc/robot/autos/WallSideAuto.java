@@ -57,13 +57,13 @@ public class WallSideAuto extends SequentialCommandGroup {
         // Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
 
         PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweepR", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
         Command grabFirstConeSweep = swerve.followTrajectoryCommand(gFCS);
 
         PathPlannerTrajectory gSCS = PathPlanner.loadPath("grabSecondConeSweepR", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gSCS, DriverStation.getAlliance());
         Command grabSecondConeSweepCommand = swerve.followTrajectoryCommand(gSCS);
 
-        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
-        PathPlannerTrajectory.transformTrajectoryForAlliance(gSCS, DriverStation.getAlliance());
 
         
         addCommands(

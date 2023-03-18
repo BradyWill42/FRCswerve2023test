@@ -55,26 +55,30 @@ public class BarrierSideAuto extends SequentialCommandGroup {
 
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
         PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverseL", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCR, DriverStation.getAlliance());
+
         Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
 
         PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweepL", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
         Command grabFirstConeSweep = swerve.followTrajectoryCommand(gFCS);
 
         PathPlannerTrajectory gSCS = PathPlanner.loadPath("grabSecondConeSweepL", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory.transformTrajectoryForAlliance(gSCS, DriverStation.getAlliance());
         Command grabSecondConeSweepCommand = swerve.followTrajectoryCommand(gSCS);
 
-        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCR, DriverStation.getAlliance());
-        PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
-        PathPlannerTrajectory.transformTrajectoryForAlliance(gSCS, DriverStation.getAlliance());
-
-        
+            
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
-            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
+            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), gFCS.getInitialHolonomicPose().getRotation()))),
+            
+            new InstantCommand(() -> grabber.grabThang(false)),
+            new WaitCommand(0.2),
+
             new ParallelCommandGroup(
                 // new InstantCommand(() -> grabber.grabThang(false)),
-                new JawToAngle(jaw, Constants.Snake.autoAngle)
+                new JawToAngle(jaw, Constants.Snake.midAngle)
             ),
             new WaitCommand(0.1),
             new Lick(tongue, true),
@@ -88,22 +92,7 @@ public class BarrierSideAuto extends SequentialCommandGroup {
             grabFirstConeSweep,
 
             new Lick(tongue, true),
-            new WaitCommand(0.2),
-
-            // new WaitCommand(0.2),
-            // new InstantCommand(() -> tongue.boop()),
-            // new WaitCommand(0.2),
-            // new InstantCommand(() -> tongue.boop()),
-            
-            grabSecondConeSweepCommand,
-
-            new Lick(tongue, true),
             new WaitCommand(0.2)
-            
-            // new WaitCommand(0.2),
-            // new InstantCommand(() -> tongue.boop()),
-            // new WaitCommand(0.2),
-            // new InstantCommand(() -> tongue.boop())
         );
 
     }

@@ -16,7 +16,7 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Tongue;
 
-public class DefaultHead extends CommandBase {
+public class DefaultJaw extends CommandBase {
   
   private Jaw jaw;
   private Neck neck;
@@ -25,13 +25,13 @@ public class DefaultHead extends CommandBase {
   private BooleanSupplier jawOpen, jawClose;
   private double currentAngle;
 
-  public DefaultHead(BooleanSupplier jawOpen, BooleanSupplier jawClose, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
+  public DefaultJaw(BooleanSupplier jawOpen, BooleanSupplier jawClose, Jaw jaw, Neck neck, Tongue tongue, Grabber grabber) {
     this.jaw = jaw;
     this.neck = neck;
     this.tongue = tongue;
     this.grabber = grabber;
 
-    addRequirements(jaw, tongue);
+    addRequirements(jaw);
 
 
     this.jawOpen = jawOpen;

@@ -33,8 +33,8 @@ import frc.robot.commands.autocommands.BalanceRobot;
 import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.commands.autocommands.LimelightAlign;
 import frc.robot.commands.autocommands.LimelightAlign.PoleHeight;
-import frc.robot.commands.defaultcommands.DefaultHead;
-import frc.robot.commands.defaultcommands.DefaultMouth;
+import frc.robot.commands.defaultcommands.DefaultGrabber;
+import frc.robot.commands.defaultcommands.DefaultJaw;
 import frc.robot.commands.defaultcommands.DefaultNeck;
 import frc.robot.commands.defaultcommands.DefaultSwerve;
 import frc.robot.commands.defaultcommands.DefaultTongue;
@@ -74,21 +74,21 @@ public class RobotContainer {
     private boolean isFieldOriented = false;
 
     /* Licker Toggle */
-    private boolean lick = false, coneGrab = false, cubeGrab = false;
+    private boolean lick = false, grabThang = false, lowPressure = false;
 
     /* Driver Buttons */
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton alignToScore = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton tongueLick = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton alignToScore = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     /* Operator Buttons */
-    private final JoystickButton coneGrabButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-    private final JoystickButton cubeGrabButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton grabThingButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton switchPressureButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     private final JoystickButton jawOpen = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton jawClose = new JoystickButton(operator, XboxController.Button.kBack.value);
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value); 
-    private final JoystickButton tongueLick = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton jawToScore = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton jawToClose = new JoystickButton(operator, XboxController.Button.kA.value);
     // private final JoystickButton changePressure = new JoystickButton(operator, XboxController.Button.kX.value);
@@ -116,6 +116,7 @@ public class RobotContainer {
         
 
         
+
         swerve.setDefaultCommand(
             new DefaultSwerve(
                 swerve, 
@@ -127,12 +128,6 @@ public class RobotContainer {
         );
 
         neck.setDefaultCommand(
-            // new DefaultNeck(
-            //     () -> 0, 
-            //     () -> 0, 
-            //     neck
-            //     )
-
             new DefaultNeck(
                 () -> operator.getRawAxis(leftTriggerAxis),
                 () -> operator.getRawAxis(rightTriggerAxis),
@@ -143,7 +138,7 @@ public class RobotContainer {
                 )
         );
         jaw.setDefaultCommand(
-            new DefaultHead(
+            new DefaultJaw(
                 () -> jawOpen.getAsBoolean(), 
                 () -> jawClose.getAsBoolean(), 
                 jaw, 
@@ -153,26 +148,26 @@ public class RobotContainer {
                 )
         );
 
-        // grabber.setDefaultCommand(
-        //     new DefaultMouth(
-        //         () -> lick, 
-        //         () -> coneGrab, 
-        //         () -> cubeGrab,
-        //         tongue, 
-        //         grabber
-        //         )
-        // );    
+        grabber.setDefaultCommand(
+            new DefaultGrabber(
+                () -> lick, 
+                () -> grabThang, 
+                () -> lowPressure,
+                tongue, 
+                grabber
+                )
+        );    
         
         
-        // tongue.setDefaultCommand(
-        //     new DefaultTongue(
-        //         () -> lick, 
-        //         () -> coneGrab, 
-        //         () -> cubeGrab,
-        //         tongue, 
-        //         grabber
-        //         )
-        // );    
+        tongue.setDefaultCommand(
+            new DefaultTongue(
+                () -> lick, 
+                () -> grabThang, 
+                () -> lowPressure,
+                tongue, 
+                grabber
+                )
+        );    
     
         //Initalize Autonomous Chooser
         chooser = new SendableChooser<Command>();
@@ -196,12 +191,12 @@ public class RobotContainer {
         zeroOdometry.onTrue(new InstantCommand(() -> swerve.resetOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
-        alignToScore.onTrue(new LimelightAlign(jaw, neck, swerve, limelight, PoleHeight.GROUND));
+        // alignToScore.onTrue(new LimelightAlign(jaw, neck, swerve, limelight, PoleHeight.GROUND));
 
         /* Operator Buttons */
         tongueLick.toggleOnTrue(new InstantCommand(() -> toggleLicker()));
-        coneGrabButton.toggleOnTrue(new InstantCommand(() -> toggleGrabCone()));
-        cubeGrabButton.toggleOnTrue(new InstantCommand(() -> toggleGrabCube()));
+        grabThingButton.toggleOnTrue(new InstantCommand(() -> toggleGrab()));
+        switchPressureButton.toggleOnTrue(new InstantCommand(() -> togglePressure()));
 
         jawToScore.onTrue(new JawToAngle(jaw, Constants.Snake.midAngle));
         jawToClose.onTrue(new JawToAngle(jaw, Constants.Snake.downAngle));
@@ -223,16 +218,17 @@ public class RobotContainer {
         lick = !lick;
     }
 
-    public void toggleGrabCone(){
-        coneGrab = !coneGrab;
+    public void toggleGrab(){
+        grabThang = !grabThang;
     }
 
-    public void toggleGrabCube(){
-        cubeGrab = !cubeGrab;
+    public void togglePressure(){
+        lowPressure = !lowPressure;
     }
 
     public void initializeAutoChooser() {
-    
+        double initRoll = swerve.getRoll();
+
         chooser.setDefaultOption("Nothing", new AutoTurn(180, swerve, true, true));
 
         chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue));
@@ -245,7 +241,12 @@ public class RobotContainer {
 
         chooser.addOption("Lick Test", new LickAuto(tongue, grabber, jaw));
 
-        chooser.addOption("Score High and Drive Across", new DriveForward(swerve, jaw, tongue, neck, grabber));
+        chooser.addOption("Score Low And Drive Across", new DriveForward(swerve, jaw, tongue, neck, grabber));
+
+        chooser.addOption("Testing Balancer", new SequentialCommandGroup(
+            new WaitCommand(5),
+            new BalanceRobot(swerve, initRoll)
+        ));
         // chooser.addOption("Score from Right Side", getAutonomousCommand());
         SmartDashboard.putData(chooser);
     }
@@ -257,6 +258,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // SmartDashboard.putNumber("PSI", new Compressor(PneumaticsModuleType.CTREPCM).getPressure())
+        grabThang = false;
+        lowPressure = true;
+        
         return chooser.getSelected();
     }
 
