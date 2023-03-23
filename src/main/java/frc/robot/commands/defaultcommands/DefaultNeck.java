@@ -30,6 +30,7 @@ public class DefaultNeck extends CommandBase {
     this.neck = neck;
     this.tongue = tongue;
     this.grabber = grabber;
+    this.jaw = jaw;
     this.neckIn = neckIn;
     this.neckOut = neckOut;
 
@@ -46,10 +47,10 @@ public class DefaultNeck extends CommandBase {
   
   @Override
   public void execute() {
-    if(neckIn.getAsDouble() > 0.1) {
+    if(neckIn.getAsDouble() > 0.1 && jaw.getJawAngle() > 10) {
         neck.neckIn();
     }
-    else if (neckOut.getAsDouble() > 0.1) {
+    else if (neckOut.getAsDouble() > 0.1 && jaw.getJawAngle() > 10) {
         neck.neckOut();
     }
     else {

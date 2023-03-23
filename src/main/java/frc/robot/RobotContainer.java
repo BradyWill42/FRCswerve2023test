@@ -32,6 +32,7 @@ import frc.robot.commands.autocommands.AutoTurn;
 import frc.robot.commands.autocommands.BalanceRobot;
 import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.commands.autocommands.LimelightAlign;
+import frc.robot.commands.autocommands.NeckToLength;
 import frc.robot.commands.autocommands.LimelightAlign.PoleHeight;
 import frc.robot.commands.defaultcommands.DefaultGrabber;
 import frc.robot.commands.defaultcommands.DefaultJaw;
@@ -91,6 +92,7 @@ public class RobotContainer {
     private final JoystickButton resetEncoders = new JoystickButton(operator, XboxController.Button.kY.value); 
     private final JoystickButton jawToScore = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton jawToClose = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton setNeckToHigh = new JoystickButton(operator, XboxController.Button.kB.value);
     // private final JoystickButton changePressure = new JoystickButton(operator, XboxController.Button.kX.value);
 
 
@@ -165,7 +167,8 @@ public class RobotContainer {
                 () -> grabThang, 
                 () -> lowPressure,
                 tongue, 
-                grabber
+                grabber,
+                jaw
                 )
         );    
     
@@ -243,9 +246,9 @@ public class RobotContainer {
 
         chooser.addOption("Score Low And Drive Across", new DriveForward(swerve, jaw, tongue, neck, grabber));
 
-        chooser.addOption("Testing Balancer", new SequentialCommandGroup(
-            new WaitCommand(5),
-            new BalanceRobot(swerve, initRoll)
+        chooser.addOption("Neck Out Auto", new ParallelCommandGroup(
+            new JawToAngle(jaw, 45),
+            new NeckToLength(neck, 0.75)
         ));
         // chooser.addOption("Score from Right Side", getAutonomousCommand());
         SmartDashboard.putData(chooser);

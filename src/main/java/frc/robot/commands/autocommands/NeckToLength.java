@@ -49,14 +49,16 @@ public class NeckToLength extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    neck.neckOff();
+    
   }
 
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(length - neck.getNeckDistance()) <= Units.inchesToMeters(2)); //4 is the radius of the interior of the cone
-                                                                  //4 is a buffer zone for the robot -> 2 inches before, 2 inches past = 4 total inches
+    return (Math.abs(length - neck.getNeckDistance()) <= Units.inchesToMeters(1));    
+
+    //4 is the radius of the interior of the cone
+    //4 is a buffer zone for the robot -> 2 inches before, 2 inches past = 4 total inches
   }
 }

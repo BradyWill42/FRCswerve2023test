@@ -48,13 +48,13 @@ public class JawToAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    jaw.setJawAngle(angle);
   }
 
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angle - jaw.getJawAngle()) <= 1);
+    return (Math.abs(angle - jaw.getJawAngle()) <= 2);
   }
 }

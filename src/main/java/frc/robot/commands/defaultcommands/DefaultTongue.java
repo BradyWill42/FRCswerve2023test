@@ -20,12 +20,14 @@ public class DefaultTongue extends CommandBase {
   
   private Tongue tongue;
   private Grabber grabber;
+  private Jaw jaw;
   private BooleanSupplier lick, grabCone, grabCube;
   private boolean psi_60, psi_30;
 
-  public DefaultTongue(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber) {
+  public DefaultTongue(BooleanSupplier lick, BooleanSupplier grabCone, BooleanSupplier grabCube, Tongue tongue, Grabber grabber, Jaw jaw) {
     this.tongue = tongue;
     this.grabber = grabber;
+    this.jaw = jaw;
     // this.changePressure = changePressure;
 
 
@@ -55,25 +57,12 @@ public class DefaultTongue extends CommandBase {
     }
     SmartDashboard.putString("Can Grab", canGrab);
     SmartDashboard.putBoolean("Grab Cone", grabCone.getAsBoolean());
+    
 
-    // SmartDashboard.putBoolean("lick", lick.getAsBoolean());
-    SmartDashboard.putBoolean("DefaultTongue", true);
+    if(jaw.getJawAngle() > 30){
+      tongue.lick(lick.getAsBoolean());
+    }
     
-    // if(grabCone.getAsBoolean()){
-    //   psi_60 = true;
-    // }
-    
-    // if(grabCube.getAsBoolean()){
-    //   psi_60 = false;
-    // }
-    
-        tongue.lick(lick.getAsBoolean());
-    
-    // if(!tongue.isLicked()){
-    //   grabber.grabThang(grabCone.getAsBoolean());
-    // }
-
-    // grabber.switchPressure(grabCube.getAsBoolean());
   }
 
 

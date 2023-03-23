@@ -152,6 +152,9 @@ public final class Constants {
         /* Snake Jaw Angle Gear Ratio */
         public static final double jawGearRatio = (100.0 / 1.0);
 
+        /* Snake Neck Gear Ratio */
+        public static final double neckGearRatio = (15.6 / 1.0);
+
         /* Pneumatics Constants */
         public static final int brakeID1 = 2;
         public static final int brakeID2 = 3;
@@ -178,6 +181,8 @@ public final class Constants {
         public static final double limelightHeight = 0.338;
         public static final double midPoleHeight = 0.87;
         public static final double highPoleHeight = 1.17;
+        public static final double lengthToMidPole = 0.6;
+        public static final double lengthToHighPole = 1.05;
 
         /* Jaw PID Constants */
         public static final double jawPP = 0.012744;
@@ -193,7 +198,7 @@ public final class Constants {
         public static final int jawVSlot = 1;
 
         /* Neck PID Constants */
-        public static final double neckPP = 0.0;
+        public static final double neckPP = 3.596;
         public static final double neckPI = 0.0;
         public static final double neckPD = 0.0;
         public static final double neckPF = 0.0;

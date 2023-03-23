@@ -30,8 +30,8 @@ public class BalanceAuto extends SequentialCommandGroup{
             new JawToAngle(jaw, Constants.Snake.midAngle),
             new Lick(tongue, true),
             new AutoDrive(-3, swerve, true, true),
-            new AutoDrive(-5.2, swerve, true, false),
-            new AutoDrive(3, swerve, true, true),
+            new AutoDrive(-5, swerve, true, false),
+            new AutoDrive(2.5, swerve, true, true),
             new BalanceRobot(swerve, initAngle)
         );
     }
