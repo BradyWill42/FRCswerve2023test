@@ -80,7 +80,7 @@ public class WallSideAuto extends SequentialCommandGroup {
             // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.midLength),
             // new InstantCommand(() -> grabber.grab()),
             // new PlaceCone(neck, jaw, Constants.Snake.midAngle, Constants.Snake.retractedLength),
-            new JawToAngle(jaw, Constants.Snake.midAngle),
+            new JawToAngle(jaw, neck, Constants.Snake.midAngle),
 
             new Lick(tongue, true),
             new WaitCommand(0.2),

@@ -50,13 +50,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class LickAuto extends SequentialCommandGroup {
 
-    public LickAuto(Tongue tongue, Grabber grabber, Jaw jaw){
+    public LickAuto(Tongue tongue, Grabber grabber, Jaw jaw, Neck neck){
 
 
         addCommands(
             new ParallelCommandGroup(
                 // new InstantCommand(() -> grabber.grabThang(false)),
-                new JawToAngle(jaw, Constants.Snake.midAngle)
+                new JawToAngle(jaw, neck, Constants.Snake.midAngle)
             ),
             new WaitCommand(0.2),
             new Lick(tongue, true),

@@ -78,7 +78,7 @@ public class BarrierSideAuto extends SequentialCommandGroup {
 
             new ParallelCommandGroup(
                 // new InstantCommand(() -> grabber.grabThang(false)),
-                new JawToAngle(jaw, Constants.Snake.midAngle)
+                new JawToAngle(jaw, neck, Constants.Snake.midAngle)
             ),
             new WaitCommand(0.1),
             new Lick(tongue, true),

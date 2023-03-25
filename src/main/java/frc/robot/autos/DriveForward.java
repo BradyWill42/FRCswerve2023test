@@ -76,7 +76,7 @@ public class DriveForward extends SequentialCommandGroup {
             new WaitCommand(0.2),
 
             new ParallelCommandGroup(
-                new JawToAngle(jaw, Constants.Snake.midAngle)
+                new JawToAngle(jaw, neck, Constants.Snake.midAngle)
             ),
                     
             new Lick(tongue, true),

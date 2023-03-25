@@ -2,18 +2,18 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7955882065610285,
-        "y": 4.4077989010678875
+        "x": 1.966875728623252,
+        "y": 4.362122228517961
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5835108080472566,
-        "y": 4.750373945192335
+        "x": 2.754798330109481,
+        "y": 4.704697272642409
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
-      "isLocked": true,
+      "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
@@ -35,7 +35,7 @@
         "x": 4.6743183242721,
         "y": 4.84451622751223
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -90.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 7.299627248827148,
+        "x": 7.345303921377073,
         "y": 4.5905055912675925
       },
       "prevControl": {
-        "x": 5.8493928953669885,
+        "x": 5.895069567916913,
         "y": 4.613343927542556
       },
       "nextControl": {
-        "x": 5.8493928953669885,
+        "x": 5.895069567916913,
         "y": 4.613343927542556
       },
       "holonomicAngle": 0.0,
@@ -150,9 +150,9 @@
   "isReversed": false,
   "markers": [
     {
-      "position": 1.9999999999999998,
+      "position": 2.0,
       "names": [
-        "grabCone"
+        "GrabCone"
       ]
     }
   ]

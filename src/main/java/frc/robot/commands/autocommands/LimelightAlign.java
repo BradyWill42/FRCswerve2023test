@@ -2,6 +2,7 @@ package frc.robot.commands.autocommands;
 
 import java.lang.invoke.ConstantCallSite;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +19,6 @@ public class LimelightAlign extends CommandBase{
   private Jaw jaw;
   private Neck neck;
   private Swerve swerve;
-  private Limelight limelight;
   private double angleToPole, distanceToBase, lengthToPole, distanceFromTarget, strafeOffset;
   public enum PoleHeight{
     GROUND, MID_POLE, HIGH_POLE
@@ -26,64 +26,68 @@ public class LimelightAlign extends CommandBase{
   public PoleHeight poleHeight;
 
   
-  public LimelightAlign(Jaw jaw, Neck neck, Swerve swerve, Limelight Limelight, PoleHeight poleHeight) {
+  public LimelightAlign(Jaw jaw, Neck neck, Swerve swerve, PoleHeight poleHeight) {
     
-    addRequirements(jaw, neck, swerve);
-
-    this.limelight = limelight;
-
     this.jaw = jaw;
     this.neck = neck;
     this.swerve = swerve;
     this.poleHeight = poleHeight;
     
     // Use addRequirements() here to declare subsystem dependencies.
-    // addRequirements(jaw, neck, swerve);
+    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.''
   @Override
   public void initialize() {
-    
+    swerve.setOdometry(new Pose2d());
+  
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Limelight X", Limelight.getTx());
+
     switch(poleHeight){
 
+      //Ground case uses mid height pole to align
       case GROUND:
-        angleToPole = (Constants.Snake.limelightAngle + limelight.getY()) * (Math.PI / 180);
-        distanceToBase = (0 - Constants.Snake.limelightHeight) / Math.tan(Constants.Snake.limelightAngle);
-        lengthToPole = 0;
+        angleToPole = Math.toRadians(Constants.Snake.limelightAngle + Limelight.getTy());
+        distanceToBase = (Constants.Snake.midPoleHeight - Constants.Snake.limelightHeight) / Math.tan(Constants.Snake.limelightAngle);
+        lengthToPole = Constants.Snake.lengthToMidPole;
         SmartDashboard.putString("Pole Selected: ", "Ground");
         break;
 
+      //Mid Case uses mid height pole to align
       case MID_POLE:
-      angleToPole = Math.toRadians(Constants.Snake.limelightAngle + limelight.getY());
+      angleToPole = Math.toRadians(Constants.Snake.limelightAngle + Limelight.getTy());
       distanceToBase = (Constants.Snake.midPoleHeight - Constants.Snake.limelightHeight) / Math.tan(angleToPole);
       lengthToPole = Constants.Snake.lengthToMidPole;
       SmartDashboard.putString("Pole Selected: ", "Mid Pole");
       SmartDashboard.putNumber("AngleToPole", Math.toDegrees(angleToPole));
       break;
 
+      //High Case uses high height pole to align
       case HIGH_POLE:
-      angleToPole = (Constants.Snake.limelightAngle + limelight.getY()) * (Math.PI / 180);
+      angleToPole = Math.toRadians(Constants.Snake.limelightAngle + Limelight.getTy());
       distanceToBase = (Constants.Snake.highPoleHeight - Constants.Snake.limelightHeight) / Math.tan(angleToPole);
       lengthToPole = Constants.Snake.lengthToHighPole;
       SmartDashboard.putString("Pole Selected: ", "High Pole");
       break;
 
     }
-
+    //Calculates distance robot has to drive forward to be on the edge of the scoring station
     distanceFromTarget = distanceToBase - lengthToPole;
-    strafeOffset = distanceToBase * Math.tan(Math.toRadians(limelight.getX()));
+
+    //calculates how far left or right we have to strafe to align with the pole we are scoring on. 
+    strafeOffset = distanceToBase * Math.tan(Math.toRadians(-Limelight.getTx()));
 
 
     SmartDashboard.putNumber("distanceFromTarget", distanceFromTarget);
     SmartDashboard.putNumber("strafeOffset", strafeOffset);
-    // swerve.drive(new Translation2d(distanceFromTarget, strafeOffset), 0, true, false);
+    swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(8.0), 0, true, true);
     
 
     
@@ -93,13 +97,17 @@ public class LimelightAlign extends CommandBase{
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    
   }
 
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(Math.abs(distanceFromTarget) < 0.01 && Math.abs(strafeOffset) < 0.01){
+      return true;
+    } else {
+      return false;
+    }
   }
 }

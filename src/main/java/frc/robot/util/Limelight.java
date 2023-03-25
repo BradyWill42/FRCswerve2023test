@@ -1,81 +1,132 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/**
+ * Wrapper class for getting and setting Limelight NetworkTable values.
+ * 
+ * @author Dan Waxman
+ */
 public class Limelight {
+	private static NetworkTableInstance table = null;
 
-    private String id;
-    private NetworkTable kTable;
-    private NetworkTableEntry tv, tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, getpipe; 
+	/**
+	 * Light modes for Limelight.
+	 * 
+	 * @author Dan Waxman
+	 */
+	public static enum LightMode {
+		eOn, eOff, eBlink
+	}
 
-    public Limelight(String id) {
-        this.id = id;
-        kTable = NetworkTableInstance.getDefault().getTable("limelight-" + this.id);
-        tv = kTable.getEntry("tv");
-        tx = kTable.getEntry("tx");
-        ty = kTable.getEntry("ty");
-        ta = kTable.getEntry("ta");
-        ts = kTable.getEntry("ts");
-        tl = kTable.getEntry("tl");
-        tshort = kTable.getEntry("tshort");
-        tlong = kTable.getEntry("tlong");
-        thor = kTable.getEntry("thor");
-        tvert = kTable.getEntry("tvert");
-        getpipe = kTable.getEntry("getpipe"); 
-    }
+	/**
+	 * Camera modes for Limelight.
+	 * 
+	 * @author Dan Waxman
+	 */
+	public static enum CameraMode {
+		eVision, eDriver
+	}
 
-    public Limelight() {
-        this.id = "";
-        kTable = NetworkTableInstance.getDefault().getTable("limelight");
-        tv = kTable.getEntry("tv");
-        tx = kTable.getEntry("tx");
-        ty = kTable.getEntry("ty");
-        ta = kTable.getEntry("ta");
-        ts = kTable.getEntry("ts");
-        tl = kTable.getEntry("tl");
-        tshort = kTable.getEntry("tshort");
-        tlong = kTable.getEntry("tlong");
-        thor = kTable.getEntry("thor");
-        tvert = kTable.getEntry("tvert");
-        getpipe = kTable.getEntry("getpipe"); 
-    }
+	/**
+	 * Gets whether a target is detected by the Limelight.
+	 * 
+	 * @return true if a target is detected, false otherwise.
+	 */
+	public static boolean isTarget() {
+		return getValue("tv").getDouble(0) == 1;
+	}
 
-    public boolean getValidTarget() {
-        if(tv.getDouble(0.0) == 1.0) {
-            return true;
-        }
-        return false;
-    }
-    public double getX() {
-        return tx.getDouble(0.0);
-    }
-    public double getY() {
-        return ty.getDouble(0.0);
-    }
-    public double getArea() {
-        return ta.getDouble(0.0);   
-    }
-    public double getSkew() {
-        return ts.getDouble(0.0);
-    }
-    public double getLatency() {
-        return tl.getDouble(0.0);
-    }
-    public double getShort() {
-        return tshort.getDouble(0.0);
-    }
-    public double getLong() {
-        return tlong.getDouble(0.0);
-    }
-    public double getHorizontal() {
-        return thor.getDouble(0.0);
-    }
-    public double getVertical() {
-        return tvert.getDouble(0.0);
-    }
-    public double getPipeline() {
-        return getpipe.getDouble(0.0);
-    }
+	/**
+	 * Horizontal offset from crosshair to target (-27 degrees to 27 degrees).
+	 * 
+	 * @return tx as reported by the Limelight.
+	 */
+	public static double getTx() {
+		return getValue("tx").getDouble(0.00);
+	}
+
+	/**
+	 * Vertical offset from crosshair to target (-20.5 degrees to 20.5 degrees).
+	 * 
+	 * @return ty as reported by the Limelight.
+	 */
+	public static double getTy() {
+		return getValue("ty").getDouble(0.00);
+	}
+
+	/**
+	 * Area that the detected target takes up in total camera FOV (0% to 100%).
+	 * 
+	 * @return Area of target.
+	 */
+	public static double getTa() {
+		return getValue("ta").getDouble(0.00);
+	}
+
+	/**
+	 * Gets target skew or rotation (-90 degrees to 0 degrees).
+	 * 
+	 * @return Target skew.
+	 */
+	public static double getTs() {
+		return getValue("ts").getDouble(0.00);
+	}
+
+	/**
+	 * Gets target latency (ms).
+	 * 
+	 * @return Target latency.
+	 */
+	public static double getTl() {
+		return getValue("tl").getDouble(0.00);
+	}
+
+	/**
+	 * Sets LED mode of Limelight.
+	 * 
+	 * @param mode
+	 *            Light mode for Limelight.
+	 */
+	public static void setLedMode(LightMode mode) {
+		getValue("ledMode").setNumber(mode.ordinal());
+	}
+
+	/**
+	 * Sets camera mode for Limelight.
+	 * 
+	 * @param mode
+	 *            Camera mode for Limelight.
+	 */
+	public static void setCameraMode(CameraMode mode) {
+		getValue("camMode").setNumber(mode.ordinal());
+	}
+
+	/**
+	 * Sets pipeline number (0-9 value).
+	 * 
+	 * @param number
+	 *            Pipeline number (0-9).
+	 */
+	public static void setPipeline(int number) {
+		getValue("pipeline").setNumber(number);
+	}
+
+	/**
+	 * Helper method to get an entry from the Limelight NetworkTable.
+	 * 
+	 * @param key
+	 *            Key for entry.
+	 * @return NetworkTableEntry of given entry.
+	 */
+	private static NetworkTableEntry getValue(String key) {
+		if (table == null) {
+			table = NetworkTableInstance.getDefault();
+		}
+
+		return table.getTable("limelight").getEntry(key);
+	}
 }

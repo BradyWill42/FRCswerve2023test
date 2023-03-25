@@ -7,10 +7,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSensor;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -21,7 +18,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkMaxAlternateEncoder.Type;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -41,6 +38,8 @@ public class Neck extends SubsystemBase {
   private CANSparkMax leftNeckMotor, rightNeckMotor;
   private RelativeEncoder leftNeckEncoder, rightNeckEncoder;
 
+  private RelativeEncoder rightNeckTestEncoder;
+
   // private RelativeEncoder leftNeckTestEncoder, rightNeckTestEncoder;
   
   private SparkMaxPIDController leftNeckPIDController, rightNeckPIDController;
@@ -59,7 +58,7 @@ public class Neck extends SubsystemBase {
     brakeEnabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID1);
     brakeDisabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID2);
 
-    
+    // rightNeckTestEncoder = rightNeckMotor.getAlternateEncoder(Type.kQuadrature, 2048);
 
     // leftNeckTestEncoder = leftNeckMotor.getEncoder();
     // rightNeckTestEncoder = rightNeckMotor.getEncoder();
@@ -100,6 +99,8 @@ public class Neck extends SubsystemBase {
 
   public void setEncoderCoversions(){
     
+    // rightNeckTestEncoder.setPositionConversionFactor((Math.PI * shaftDiameter) * (1.0 / Constants.Snake.neckGearRatio));
+  
     rightNeckEncoder.setPositionConversionFactor((Math.PI * shaftDiameter) * (1.0 / Constants.Snake.neckGearRatio));
     leftNeckEncoder.setPositionConversionFactor((Math.PI * shaftDiameter) * (1.0 / Constants.Snake.neckGearRatio));
     
@@ -150,7 +151,6 @@ public class Neck extends SubsystemBase {
   public void neckIn() {
     //if(leftNeckEncoder.getDistance() > minPosition){
       enableBrakes(false);
-
       leftNeckMotor.set(-.9);
       rightNeckMotor.set(-.9);
     //}
@@ -171,11 +171,11 @@ public class Neck extends SubsystemBase {
   public void neckOff() {
     leftNeckMotor.set(0);
     rightNeckMotor.set(0);
-
     enableBrakes(true);
   }
   
   public void setNeckPosition(double position){
+    enableBrakes(false);
     leftNeckPIDController.setReference(position, ControlType.kPosition, 0);
     rightNeckPIDController.setReference(position, ControlType.kPosition, 0);
   }
@@ -187,7 +187,7 @@ public class Neck extends SubsystemBase {
     SmartDashboard.putNumber("leftNeckDistance", getLeftNeckDistance());
     SmartDashboard.putNumber("rightNeckDistance", getRightNeckDistance());
 
-    SmartDashboard.putNumber("Raw Neck Right Encoder Values", leftNeckEncoder.getPosition());
+    // SmartDashboard.putNumber("Raw Neck Right Encoder Values", rightNeckTestEncoder.getPosition());
 
   }
 }

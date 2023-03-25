@@ -24,10 +24,12 @@ public class JawToAngle extends CommandBase {
   /** Creates a new JawToAngle. */
 
   private Jaw jaw;
+  private Neck neck;
   private double angle;
 
-  public JawToAngle(Jaw jaw, double angle) {
+  public JawToAngle(Jaw jaw, Neck neck, double angle) {
     this.jaw = jaw;
+    this.neck = neck;
     this.angle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(jaw);
@@ -42,7 +44,9 @@ public class JawToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    jaw.setJawAngle(angle);
+    if(neck.getNeckDistance() < 0.5 || angle > 30){
+      jaw.setJawAngle(angle);
+    }
   }
 
   // Called once the command ends or is interrupted.

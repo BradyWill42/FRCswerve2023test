@@ -30,6 +30,7 @@ import frc.robot.autos.*;
 import frc.robot.commands.autocommands.AutoDrive;
 import frc.robot.commands.autocommands.AutoTurn;
 import frc.robot.commands.autocommands.BalanceRobot;
+import frc.robot.commands.autocommands.Grab;
 import frc.robot.commands.autocommands.JawToAngle;
 import frc.robot.commands.autocommands.LimelightAlign;
 import frc.robot.commands.autocommands.NeckToLength;
@@ -41,6 +42,8 @@ import frc.robot.commands.defaultcommands.DefaultSwerve;
 import frc.robot.commands.defaultcommands.DefaultTongue;
 import frc.robot.subsystems.*;
 import frc.robot.util.Limelight;
+import frc.robot.util.Limelight.CameraMode;
+import frc.robot.util.Limelight.LightMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -82,7 +85,7 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton tongueLick = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    // private final JoystickButton alignToScore = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton alignToScore = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     /* Operator Buttons */
     private final JoystickButton grabThingButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
@@ -102,10 +105,13 @@ public class RobotContainer {
     private final Jaw jaw = new Jaw();
     private final Grabber grabber = new Grabber();
     private final Tongue tongue = new Tongue();
-    private final Limelight limelight = new Limelight();
+
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        Limelight.setPipeline(0);
+        Limelight.setCameraMode(CameraMode.eVision);
+        
         if(translationAxis < Math.abs(0.1)){
             translationAxis = 0;
         }
@@ -115,9 +121,7 @@ public class RobotContainer {
         if(rotationAxis < Math.abs(0.1)){
             rotationAxis = 0;
         }    
-        
-
-        
+                
 
         swerve.setDefaultCommand(
             new DefaultSwerve(
@@ -175,6 +179,8 @@ public class RobotContainer {
         //Initalize Autonomous Chooser
         chooser = new SendableChooser<Command>();
 
+        SmartDashboard.putNumber("Limelight X", Limelight.getTx());
+
         // Configure the button bindings
         configureButtonBindings();
 
@@ -194,15 +200,15 @@ public class RobotContainer {
         zeroOdometry.onTrue(new InstantCommand(() -> swerve.resetOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
-        // alignToScore.onTrue(new LimelightAlign(jaw, neck, swerve, limelight, PoleHeight.GROUND));
+        alignToScore.onTrue(new LimelightAlign(jaw, neck, swerve, PoleHeight.MID_POLE));
 
         /* Operator Buttons */
         tongueLick.toggleOnTrue(new InstantCommand(() -> toggleLicker()));
         grabThingButton.toggleOnTrue(new InstantCommand(() -> toggleGrab()));
         switchPressureButton.toggleOnTrue(new InstantCommand(() -> togglePressure()));
 
-        jawToScore.onTrue(new JawToAngle(jaw, Constants.Snake.midAngle));
-        jawToClose.onTrue(new JawToAngle(jaw, Constants.Snake.downAngle));
+        jawToScore.onTrue(new JawToAngle(jaw, neck, Constants.Snake.midAngle));
+        jawToClose.onTrue(new JawToAngle(jaw, neck, Constants.Snake.downAngle));
 
         resetEncoders.onTrue(
             new ParallelCommandGroup(
@@ -232,24 +238,22 @@ public class RobotContainer {
     public void initializeAutoChooser() {
         double initRoll = swerve.getRoll();
 
-        chooser.setDefaultOption("Nothing", new AutoTurn(180, swerve, true, true));
+        chooser.setDefaultOption("Nothing", null);
 
-        chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue));
+        chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue, neck));
 
         chooser.addOption("Score from Barrier Side", new BarrierSideAuto(swerve, jaw, tongue, neck, grabber));
 
         chooser.addOption("Score from Wall Side", new WallSideAuto(swerve, jaw, tongue, neck, grabber));
 
-        chooser.addOption("Set Arm to 65 Degrees", new JawToAngle(jaw, 65));
+        chooser.addOption("Set Arm to 65 Degrees", new JawToAngle(jaw, neck, 65));
 
-        chooser.addOption("Lick Test", new LickAuto(tongue, grabber, jaw));
+        chooser.addOption("Lick Test", new LickAuto(tongue, grabber, jaw, neck));
 
         chooser.addOption("Score Low And Drive Across", new DriveForward(swerve, jaw, tongue, neck, grabber));
 
-        chooser.addOption("Neck Out Auto", new ParallelCommandGroup(
-            new JawToAngle(jaw, 45),
-            new NeckToLength(neck, 0.75)
-        ));
+        chooser.addOption("Barrier ThreePieceAuto", new BarrierThreePiece(swerve, jaw, tongue, neck, grabber));
+
         // chooser.addOption("Score from Right Side", getAutonomousCommand());
         SmartDashboard.putData(chooser);
     }
@@ -260,10 +264,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // SmartDashboard.putNumber("PSI", new Compressor(PneumaticsModuleType.CTREPCM).getPressure())
-        grabThang = false;
-        lowPressure = true;
-        
+        // SmartDashboard.putNumber("PSI", new Compressor(PneumaticsModuleType.CTREPCM).getPressure())        
         return chooser.getSelected();
     }
 

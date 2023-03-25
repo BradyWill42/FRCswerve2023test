@@ -19,7 +19,7 @@ import frc.robot.subsystems.Tongue;
 
 public class BalanceAuto extends SequentialCommandGroup{
     
-    public BalanceAuto(Swerve swerve, Jaw jaw, Tongue tongue){
+    public BalanceAuto(Swerve swerve, Jaw jaw, Tongue tongue, Neck neck){
         swerve.zeroGyro();
         swerve.resetOdometry(new Pose2d());
         double initAngle = swerve.getRoll();
@@ -27,7 +27,7 @@ public class BalanceAuto extends SequentialCommandGroup{
         addRequirements(swerve, jaw, tongue);
 
         addCommands(
-            new JawToAngle(jaw, Constants.Snake.midAngle),
+            new JawToAngle(jaw, neck, Constants.Snake.midAngle),
             new Lick(tongue, true),
             new AutoDrive(-3, swerve, true, true),
             new AutoDrive(-5, swerve, true, false),

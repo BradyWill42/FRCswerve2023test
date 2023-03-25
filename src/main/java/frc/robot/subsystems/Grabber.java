@@ -14,7 +14,7 @@ import frc.robot.Constants;
 
 public class Grabber extends SubsystemBase {
 
-
+  private boolean isGrabbed;
   private final DoubleSolenoid gorillaGripper;
   private final DoubleSolenoid pressureChanger;
   // private final Solenoid grab, release;
@@ -35,9 +35,11 @@ public class Grabber extends SubsystemBase {
   public void grabThang(boolean toGrab){
     if(toGrab){
       gorillaGripper.set(Value.kForward);
+      isGrabbed = true;
     } 
     if(!toGrab){
       gorillaGripper.set(Value.kReverse);
+      isGrabbed = false;
     } 
   }
 
@@ -49,6 +51,10 @@ public class Grabber extends SubsystemBase {
     } else {
       pressureChanger.set(Value.kOff);
     }
+  }
+
+  public boolean thangGrabbed(){
+    return isGrabbed;
   }
 
 
