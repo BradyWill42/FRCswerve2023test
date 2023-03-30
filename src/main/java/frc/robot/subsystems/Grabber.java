@@ -15,6 +15,7 @@ import frc.robot.Constants;
 public class Grabber extends SubsystemBase {
 
   private boolean isGrabbed;
+  private boolean cubePressure;
   private final DoubleSolenoid gorillaGripper;
   private final DoubleSolenoid pressureChanger;
   // private final Solenoid grab, release;
@@ -27,8 +28,7 @@ public class Grabber extends SubsystemBase {
 
     // grab = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.grabberID1);
     // release = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.grabberID2);
-
-    grabThang(false);
+    grabThang(true);
     switchPressure(true);
   }
 
@@ -46,11 +46,14 @@ public class Grabber extends SubsystemBase {
   public void switchPressure(boolean toGrab30){
     if(toGrab30){
       pressureChanger.set(Value.kForward);
+      cubePressure = true;
     } else if(!toGrab30){
       pressureChanger.set(Value.kReverse);
+      cubePressure = false;
     } else {
       pressureChanger.set(Value.kOff);
     }
+
   }
 
   public boolean thangGrabbed(){
@@ -60,6 +63,9 @@ public class Grabber extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    SmartDashboard.putBoolean("Cube Pressure", cubePressure);
     // This method will be called once per scheduler run
+
   }
 }

@@ -72,11 +72,6 @@ public final class CTREConfigs {
         // swerveDriveMotor.setOpenLoopRampRate(Constants.Swerve.openLoopRamp);
         // swerveDriveFXConfig.closedloopRamp = Constants.Swerve.closedLoopRamp;
         // swerveDriveMotor.setClosedLoopRampRate(Constants.Swerve.closedLoopRamp);
-
-        // /* Burn to Can Devices */
-
-        // swerveAngleMotor.burnFlash();
-        // swerveDriveMotor.burnFlash();
             
         /* Swerve CANCoder Configuration */
         swerveCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;

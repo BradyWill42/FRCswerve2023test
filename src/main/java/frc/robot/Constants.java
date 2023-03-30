@@ -95,40 +95,48 @@ public final class Constants {
 
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 1;
+            // public static final int driveMotorID = 2;
+            // public static final int angleMotorID = 1;
+            public static final int driveMotorID = 8;
+            public static final int angleMotorID = 7;
             public static final int canCoderID = 0;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(36.650391);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(264.8144);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
         public static final class Mod1 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 8;
-            public static final int angleMotorID = 7;
+            // public static final int driveMotorID = 8;
+            // public static final int angleMotorID = 7;
+            public static final int driveMotorID = 4;
+            public static final int angleMotorID = 3;
             public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(139.570313);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(51.6796);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
         public static final class Mod2 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 4;
-            public static final int angleMotorID = 3;
+            public static final int driveMotorID = 5;
+            public static final int angleMotorID = 6;
+            // public static final int driveMotorID = 4;
+            // public static final int angleMotorID = 3;
             public static final int canCoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(68.99414);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(206.1035);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
         public static final class Mod3 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 6;
-            public static final int angleMotorID = 5;
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 1;
+            // public static final int driveMotorID = 6;
+            // public static final int angleMotorID = 5;
             public static final int canCoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(160.927734);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(138.0761);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -151,46 +159,52 @@ public final class Constants {
         public static final int rightNeckEncoderID2 = 1;
         public static final int leftNeckEncoderID1 = 2;
         public static final int leftNeckEncoderID2 = 3;
+        public static final int jawEncoderID1 = 4;
+        public static final int jawEncoderID2 = 5;
+        public static final int limitSwitchID = 6;
 
         /* Snake Jaw Angle Gear Ratio */
         public static final double jawGearRatio = (100.0 / 1.0);
 
         /* Snake Neck Gear Ratio */
-        public static final double neckGearRatio = (15.6 / 1.0);
+        public static final double neckGearRatio = (10.62 / 1.0);
 
         /* Pneumatics Constants */
-        public static final int brakeID1 = 2;
-        public static final int brakeID2 = 3;
+        public static final int brakeID1 = 6;
+        public static final int brakeID2 = 7;
 
-        public static final int boopID1 = 0;
-        public static final int boopID2 = 1;
+        public static final int boopID1 = 3;
+        public static final int boopID2 = 2;
 
-        public static final int grabberID1 = 6;
-        public static final int grabberID2 = 7;
+        public static final int grabberID1 = 1;
+        public static final int grabberID2 = 0;
 
-        public static final int changePressureID1 = 5;
-        public static final int changePressureID2 = 4;
+        public static final int changePressureID1 = 4;
+        public static final int changePressureID2 = 5;
 
         /* Jaw and Neck Distance and Angle Constants */
         public static final double downAngle = 0.0;
         public static final double autoAngle = 45.0;
-        public static final double midAngle = 70.0;
+        public static final double midAngle = 40.0;
+        public static final double highConeAngle = 40.0;
+        public static final double highBlockAngle = 35.0;
         public static final double midLength = 1.25;
-        public static final double highLength = 1.78;
+        public static final double highLength = 1.6;
         public static final double retractedLength = 0.0001;
 
         /* Limelight Constants */
         public static final double limelightAngle = 45.0;
         public static final double limelightHeight = 0.338;
+        public static final double midPoleTapeHeight = 0.622;
         public static final double midPoleHeight = 0.87;
         public static final double highPoleHeight = 1.17;
         public static final double lengthToMidPole = 0.55;
         public static final double lengthToHighPole = 1.0;
 
         /* Jaw PID Constants */
-        public static final double jawPP = 0.012744;
-        public static final double jawPI = 0.00001;
-        public static final double jawPD = 0.0042177;
+        public static final double jawPP = 0.025;
+        public static final double jawPI = 0.01;
+        public static final double jawPD = 0.005;
         public static final double jawPF = 0.0;
         public static final int jawPSlot = 0;
 

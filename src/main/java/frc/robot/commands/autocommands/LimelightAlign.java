@@ -13,6 +13,7 @@ import frc.robot.subsystems.Jaw;
 import frc.robot.subsystems.Neck;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Limelight;
+import frc.robot.util.Limelight.LightMode;
 
 
 public class LimelightAlign extends CommandBase{
@@ -40,9 +41,8 @@ public class LimelightAlign extends CommandBase{
   // Called when the command is initially scheduled.''
   @Override
   public void initialize() {
-    swerve.setOdometry(new Pose2d());
-  
-    
+    Limelight.setLedMode(LightMode.eOn);
+    swerve.setOdometry(new Pose2d());    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,17 +87,17 @@ public class LimelightAlign extends CommandBase{
 
     SmartDashboard.putNumber("distanceFromTarget", distanceFromTarget);
     SmartDashboard.putNumber("strafeOffset", strafeOffset);
-    swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(8.0), 0, true, true);
-    
 
-    
+    if(Limelight.isTarget()){
+      swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(8.0), 0, true, true);
+    }   
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    Limelight.setLedMode(LightMode.eOff);
   }
 
 

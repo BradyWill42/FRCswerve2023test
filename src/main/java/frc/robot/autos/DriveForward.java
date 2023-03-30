@@ -69,7 +69,7 @@ public class DriveForward extends SequentialCommandGroup {
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
-            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(dF.getInitialPose().getTranslation(), dF.getInitialHolonomicPose().getRotation()))),
+            new InstantCommand(() -> swerve.setOdometry(new Pose2d(dF.getInitialPose().getTranslation(), dF.getInitialHolonomicPose().getRotation()))),
             
             
             new InstantCommand(() -> grabber.grabThang(false)),

@@ -54,9 +54,6 @@ public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
 
     /* Drive motor */
     mDriveMotor = new CANSparkMax(moduleConstants.driveMotorID, MotorType.kBrushless);
-    // if(moduleNumber == 0 ){
-    //     mDriveMotor.setInverted(true);
-    // }
     mDriveEncoder = mDriveMotor.getEncoder();
     mDrivePIDController = mDriveMotor.getPIDController();
     configDriveMotor();

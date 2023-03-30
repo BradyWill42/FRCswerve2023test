@@ -56,7 +56,7 @@ public class NeckToLength extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(length - neck.getNeckDistance()) <= Units.inchesToMeters(1));    
+    return (Math.abs(length - neck.getNeckDistance()) <= Units.inchesToMeters(3));    
 
     //4 is the radius of the interior of the cone
     //4 is a buffer zone for the robot -> 2 inches before, 2 inches past = 4 total inches

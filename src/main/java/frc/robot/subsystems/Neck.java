@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -50,6 +51,9 @@ public class Neck extends SubsystemBase {
   private final double maxPosition = 1.5;
   private final double minPosition = 0.01;
   private final double shaftDiameter = Units.inchesToMeters(1.25);
+  private boolean areBrakesEngaged = false;
+
+
 
   public Neck() {
     leftNeckMotor = new CANSparkMax(Constants.Snake.leftNeckMotorID,  MotorType.kBrushless);
@@ -57,6 +61,8 @@ public class Neck extends SubsystemBase {
     // brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID1, Constants.Snake.brakeID2);
     brakeEnabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID1);
     brakeDisabled = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Snake.brakeID2);
+
+
 
     // rightNeckTestEncoder = rightNeckMotor.getAlternateEncoder(Type.kQuadrature, 2048);
 
@@ -122,6 +128,8 @@ public class Neck extends SubsystemBase {
   public void enableBrakes(boolean isBraked){
     brakeDisabled.set(!isBraked);
     brakeEnabled.set(isBraked);
+
+    areBrakesEngaged = isBraked;
   }
   
 
@@ -144,15 +152,20 @@ public class Neck extends SubsystemBase {
   
   public void neckOut() {
       enableBrakes(false);
-      leftNeckMotor.set(.9);
-      rightNeckMotor.set(.9);
+
+      if(!areBrakesEngaged){
+        leftNeckMotor.set(.9);
+        rightNeckMotor.set(.9);
+      }
   }
 
   public void neckIn() {
-    //if(leftNeckEncoder.getDistance() > minPosition){
       enableBrakes(false);
-      leftNeckMotor.set(-.9);
-      rightNeckMotor.set(-.9);
+
+      if(!areBrakesEngaged){
+        leftNeckMotor.set(-.9);
+        rightNeckMotor.set(-.9);
+      }
     //}
   }
   public void rightNeckIn(){
@@ -183,7 +196,7 @@ public class Neck extends SubsystemBase {
   @Override
   public void periodic() {
     // SmartDashboard.putNumber("Extend Arm Encoder", arm.getSelectedSensorPosition());
-
+    
     SmartDashboard.putNumber("leftNeckDistance", getLeftNeckDistance());
     SmartDashboard.putNumber("rightNeckDistance", getRightNeckDistance());
 

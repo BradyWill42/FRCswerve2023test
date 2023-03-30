@@ -47,10 +47,10 @@ public class DefaultNeck extends CommandBase {
   
   @Override
   public void execute() {
-    if(neckIn.getAsDouble() > 0.1 && jaw.getJawAngle() > 10) {
+    if(neckIn.getAsDouble() > 0.1 && jaw.getJawAngle() > 0) {
         neck.neckIn();
     }
-    else if (neckOut.getAsDouble() > 0.1 && jaw.getJawAngle() > 10) {
+    else if (neckOut.getAsDouble() > 0.1 && jaw.getJawAngle() > 0) {
         neck.neckOut();
     }
     else {

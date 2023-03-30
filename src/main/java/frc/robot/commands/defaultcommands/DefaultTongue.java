@@ -48,16 +48,6 @@ public class DefaultTongue extends CommandBase {
   
   @Override
   public void execute() {
-    String canGrab;
-    if(grabCube.getAsBoolean()){
-        canGrab = "Cones";
-    }
-    else{
-      canGrab = "Cubes";
-    }
-    SmartDashboard.putString("Can Grab", canGrab);
-    SmartDashboard.putBoolean("Grab Cone", grabCone.getAsBoolean());
-    
 
     if(jaw.getJawAngle() > 30){
       tongue.lick(lick.getAsBoolean());

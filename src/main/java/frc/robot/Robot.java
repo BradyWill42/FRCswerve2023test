@@ -11,6 +11,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     //Initialize USB camera
     
+
+    // PortForwarder.add(5800, "10.48.60.11", 1182);
     // camera = new UsbCamera("USBCam", 1);
 
     CameraServer.startAutomaticCapture();

@@ -88,12 +88,8 @@ public class Swerve extends SubsystemBase {
         return swerveOdometry.getPoseMeters();
     }
 
-    public void resetOdometry(Pose2d pose) {
-        for(SwerveModule mod : mSwerveMods){
-            mod.configDriveMotor();
-            mod.configAngleMotor();
-        }
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+    public void resetOdometry() {
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), new Pose2d());
     }
 
     public void setOdometry(Pose2d pose) {

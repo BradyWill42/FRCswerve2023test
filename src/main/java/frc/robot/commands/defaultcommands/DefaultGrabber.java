@@ -46,15 +46,8 @@ public class DefaultGrabber extends CommandBase {
   
   @Override
   public void execute() {
-    String canGrab;
-    if(grabCube.getAsBoolean()){
-        canGrab = "Cones";
-    }
-    else{
-      canGrab = "Cubes";
-    }
-    SmartDashboard.putString("Can Grab", canGrab);
-    SmartDashboard.putBoolean("Grab Cone", grabCone.getAsBoolean());
+
+    SmartDashboard.putBoolean("Grab", grabCone.getAsBoolean());
 
     SmartDashboard.putBoolean("lick", lick.getAsBoolean());
     
@@ -78,7 +71,7 @@ public class DefaultGrabber extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    grabber.grabThang(false);
+
   }
   
   @Override

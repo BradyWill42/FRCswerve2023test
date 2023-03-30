@@ -59,7 +59,7 @@ public class BarrierSideAuto extends SequentialCommandGroup {
 
         Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
 
-        PathPlannerTrajectory gFCS = PathPlanner.loadPath("grabFirstConeSweepL", new PathConstraints(4.5, 5));
+        PathPlannerTrajectory gFCS = PathPlanner.loadPath("barrierSideBlue", new PathConstraints(4.5, 5));
         PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
         Command grabFirstConeSweep = swerve.followTrajectoryCommand(gFCS);
 
@@ -71,7 +71,7 @@ public class BarrierSideAuto extends SequentialCommandGroup {
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
-            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), gFCS.getInitialHolonomicPose().getRotation()))),
+            new InstantCommand(() -> swerve.setOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), gFCS.getInitialHolonomicPose().getRotation()))),
             
             new InstantCommand(() -> grabber.grabThang(false)),
             new WaitCommand(0.2),

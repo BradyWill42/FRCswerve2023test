@@ -69,7 +69,7 @@ public class WallSideAuto extends SequentialCommandGroup {
         addCommands(
 
             new InstantCommand(() -> swerve.zeroGyro()),
-            new InstantCommand(() -> swerve.resetOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
+            new InstantCommand(() -> swerve.setOdometry(new Pose2d(gFCS.getInitialPose().getTranslation(), Rotation2d.fromDegrees(180)))),
             new Lick(tongue, false),
             // new ParallelCommandGroup(
             //     new InstantCommand(() -> jaw.resetjawEncoder()),

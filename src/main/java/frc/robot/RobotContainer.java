@@ -78,7 +78,7 @@ public class RobotContainer {
     private boolean isFieldOriented = false;
 
     /* Licker Toggle */
-    private boolean lick = false, grabThang = false, lowPressure = false;
+    private boolean lick = false, grabThang = true, lowPressure = true;
 
     /* Driver Buttons */
     private final JoystickButton zeroOdometry = new JoystickButton(driver, XboxController.Button.kA.value);
@@ -197,10 +197,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroOdometry.onTrue(new InstantCommand(() -> swerve.resetOdometry(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
+        zeroOdometry.onTrue(new InstantCommand(() -> swerve.resetOdometry()));
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
-        alignToScore.onTrue(new LimelightAlign(jaw, neck, swerve, PoleHeight.MID_POLE));
+        alignToScore.whileTrue(new LimelightAlign(jaw, neck, swerve, PoleHeight.MID_POLE));
 
         /* Operator Buttons */
         tongueLick.toggleOnTrue(new InstantCommand(() -> toggleLicker()));
@@ -240,7 +240,7 @@ public class RobotContainer {
 
         chooser.setDefaultOption("Nothing", null);
 
-        chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue, neck));
+        chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue, neck, grabber));
 
         chooser.addOption("Score from Barrier Side", new BarrierSideAuto(swerve, jaw, tongue, neck, grabber));
 
@@ -264,12 +264,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // SmartDashboard.putNumber("PSI", new Compressor(PneumaticsModuleType.CTREPCM).getPressure())        
+        // SmartDashboard.putNumber("PSI", new Compressor(PneumaticsModuleType.CTREPCM).getPressure())   
         return chooser.getSelected();
-    }
-
-    public Object getAutomonousCommand() {
-        return null;
     }
 }
 

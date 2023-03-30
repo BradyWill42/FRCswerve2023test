@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -19,6 +20,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -32,39 +34,59 @@ import frc.robot.Constants;
 public class Jaw extends SubsystemBase {
 
   private CANSparkMax jawMotor;
-  private RelativeEncoder jawEncoder;
-  private SparkMaxPIDController jawPIDController;
+  // private RelativeEncoder jawEncoder;
+  private Encoder jawEncoder;
+  private PIDController jawPIDController;
   private double currentPosition;
+  private DigitalInput limitSwitch;
 
   public Jaw() {
-    jawMotor = new CANSparkMax(Constants.Snake.jawMotorID,  MotorType.kBrushless);
+    jawMotor = new CANSparkMax(Constants.Snake.jawMotorID, MotorType.kBrushless);
     jawMotor.setIdleMode(Constants.Snake.jawNeutralMode); 
 
-    jawEncoder = jawMotor.getEncoder();
-    initPID();
+    limitSwitch = new DigitalInput(Constants.Snake.limitSwitchID);
+    // jawEncoder = jawMotor.getEncoder();
 
-
+    jawEncoder = new Encoder(Constants.Snake.jawEncoderID1, Constants.Snake.jawEncoderID2);
+    resetMotors();
     setEncoderCoversions();
+    initPID();
+    
   }
 
   public void initPID(){
-    jawPIDController = jawMotor.getPIDController();
+    jawPIDController = new PIDController(
+      Constants.Snake.jawPP,
+      Constants.Snake.jawPI,
+      Constants.Snake.jawPD
+    );
 
+    jawPIDController.setTolerance(2);
 
-    jawPIDController.setP(Constants.Snake.jawPP, Constants.Snake.jawPSlot);
-    jawPIDController.setI(Constants.Snake.jawPI, Constants.Snake.jawPSlot);
-    jawPIDController.setD(Constants.Snake.jawPD, Constants.Snake.jawPSlot);
-    jawPIDController.setFF(Constants.Snake.jawPF, Constants.Snake.jawPSlot);
+    // jawPIDController.setP(Constants.Snake.jawPP, Constants.Snake.jawPSlot);
+    // jawPIDController.setI(Constants.Snake.jawPI, Constants.Snake.jawPSlot);
+    // jawPIDController.setD(Constants.Snake.jawPD, Constants.Snake.jawPSlot);
+    // jawPIDController.setFF(Constants.Snake.jawPF, Constants.Snake.jawPSlot);
 
-    jawPIDController.setP(Constants.Snake.jawVP, Constants.Snake.jawVSlot);
-    jawPIDController.setI(Constants.Snake.jawVI, Constants.Snake.jawVSlot);
-    jawPIDController.setD(Constants.Snake.jawVD, Constants.Snake.jawVSlot);
-    jawPIDController.setFF(Constants.Snake.jawVF, Constants.Snake.jawVSlot);
+    // jawPIDController.setP(Constants.Snake.jawVP, Constants.Snake.jawVSlot);
+    // jawPIDController.setI(Constants.Snake.jawVI, Constants.Snake.jawVSlot);
+    // jawPIDController.setD(Constants.Snake.jawVD, Constants.Snake.jawVSlot);
+    // jawPIDController.setFF(Constants.Snake.jawVF, Constants.Snake.jawVSlot);
+  }
+
+  public boolean isPressed(){
+    if(limitSwitch.get()){
+      jawEncoder.reset();
+    }
+    return limitSwitch.get();
   }
 
   public void setEncoderCoversions(){
-    jawEncoder.setPositionConversionFactor((1.0 / Constants.Snake.jawGearRatio) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
-    jawEncoder.setVelocityConversionFactor(((1.0 / Constants.Snake.jawGearRatio) * 360.0) / 60.0);
+    // jawEncoder.setPositionConversionFactor((1.0 / Constants.Snake.jawGearRatio) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
+    // jawEncoder.setVelocityConversionFactor(((1.0 / Constants.Snake.jawGearRatio) * 360.0) / 60.0);
+    jawEncoder.setDistancePerPulse((1.0 / 2048.0) * 360.0); // We do 1 over the gear ratio because 1 rotation of the motor is < 1 rotation of the module
+    jawEncoder.setReverseDirection(true);
+    // jawEncoder.set(((1.0 / 2048.0) * 360.0) / 60.0);
   }
 
   public void resetMotors(){
@@ -73,38 +95,39 @@ public class Jaw extends SubsystemBase {
   }
 
   public void setJawAngle(double angle){
-    jawPIDController.setReference(angle, ControlType.kPosition);
+    jawPIDController.setSetpoint(angle);
+    jawMotor.set(jawPIDController.calculate(jawEncoder.getDistance(), angle));
   }
+
+  
   
   public void resetjawEncoder() {
-    jawEncoder.setPosition(0);
+    jawEncoder.reset();
   }
 
   public double getJawAngle(){
-    return jawEncoder.getPosition();
+    return jawEncoder.getDistance();
   }
   
   public void jawOpen(){
     jawMotor.set(0.4);
-    // jawPIDController.setReference(0.4, ControlType.kVelocity);
   }
   
   public void jawClose(){
-    jawMotor.set(-0.4);
-    // jawPIDController.setReference(-0.4, ControlType.kVelocity);
+    if(!isPressed()){
+      jawMotor.set(-0.4);
+    } else {
+      jawOff();
+    }
   }
 
   public void jawOff(){
-    // currentPosition = jawEncoder.getPosition();
-    // jawPIDController.setReference(currentPosition, ControlType.kPosition);
-    jawPIDController.setReference(0, ControlType.kSmartVelocity);
     jawMotor.set(0);
   }
 
   @Override
   public void periodic() {
-    
+    isPressed();
     SmartDashboard.putNumber("Neck Angle", getJawAngle());
-
   }
 }
