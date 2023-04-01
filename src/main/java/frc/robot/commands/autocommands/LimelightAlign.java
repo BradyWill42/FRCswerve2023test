@@ -89,7 +89,8 @@ public class LimelightAlign extends CommandBase{
     SmartDashboard.putNumber("strafeOffset", strafeOffset);
 
     if(Limelight.isTarget()){
-      swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(8.0), 0, true, true);
+      swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(2.0), 0, true, true);
+      
     }   
 
   }
@@ -97,7 +98,7 @@ public class LimelightAlign extends CommandBase{
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Limelight.setLedMode(LightMode.eOff);
+    // Limelight.setLedMode(LightMode.eOff);
   }
 
 

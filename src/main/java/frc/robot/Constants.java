@@ -185,26 +185,26 @@ public final class Constants {
         /* Jaw and Neck Distance and Angle Constants */
         public static final double downAngle = 0.0;
         public static final double autoAngle = 45.0;
-        public static final double midAngle = 40.0;
-        public static final double highConeAngle = 40.0;
-        public static final double highBlockAngle = 35.0;
+        public static final double midAngle = 45.0;
+        public static final double highConeAngle = 45.0;
+        public static final double highBlockAngle = 45.0;
         public static final double midLength = 1.25;
         public static final double highLength = 1.6;
         public static final double retractedLength = 0.0001;
 
         /* Limelight Constants */
-        public static final double limelightAngle = 45.0;
+        public static final double limelightAngle = 30.0;
         public static final double limelightHeight = 0.338;
         public static final double midPoleTapeHeight = 0.622;
         public static final double midPoleHeight = 0.87;
         public static final double highPoleHeight = 1.17;
         public static final double lengthToMidPole = 0.55;
-        public static final double lengthToHighPole = 1.0;
+        public static final double lengthToHighPole = 1.4;
 
         /* Jaw PID Constants */
         public static final double jawPP = 0.025;
-        public static final double jawPI = 0.01;
-        public static final double jawPD = 0.005;
+        public static final double jawPI = 0.001;
+        public static final double jawPD = 0.001;
         public static final double jawPF = 0.0;
         public static final int jawPSlot = 0;
 

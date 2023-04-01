@@ -49,9 +49,9 @@ public class DefaultTongue extends CommandBase {
   @Override
   public void execute() {
 
-    if(jaw.getJawAngle() > 30){
-      tongue.lick(lick.getAsBoolean());
-    }
+    // if(jaw.getJawAngle() > 30){
+    tongue.lick(lick.getAsBoolean());
+    // }
     
   }
 

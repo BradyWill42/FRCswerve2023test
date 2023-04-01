@@ -110,6 +110,7 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         Limelight.setPipeline(0);
+        Limelight.setLedMode(LightMode.eOn);
         Limelight.setCameraMode(CameraMode.eVision);
         
         if(translationAxis < Math.abs(0.1)){
@@ -200,7 +201,7 @@ public class RobotContainer {
         zeroOdometry.onTrue(new InstantCommand(() -> swerve.resetOdometry()));
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         robotCentric.toggleOnTrue(new InstantCommand(() -> toggleRobotCentric()));
-        alignToScore.whileTrue(new LimelightAlign(jaw, neck, swerve, PoleHeight.MID_POLE));
+        alignToScore.whileTrue(new LimelightAlign(jaw, neck, swerve, PoleHeight.HIGH_POLE));
 
         /* Operator Buttons */
         tongueLick.toggleOnTrue(new InstantCommand(() -> toggleLicker()));

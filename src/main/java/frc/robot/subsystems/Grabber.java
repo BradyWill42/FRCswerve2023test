@@ -64,7 +64,7 @@ public class Grabber extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putBoolean("Cube Pressure", cubePressure);
+    SmartDashboard.putBoolean("Pressure", cubePressure);
     // This method will be called once per scheduler run
 
   }

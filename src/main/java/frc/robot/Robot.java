@@ -47,8 +47,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     //Initialize USB camera
     
+    for(int port = 5800; port <= 5805; port++){
+      PortForwarder.add(port, "limelight.local", port);
+    }
 
-    // PortForwarder.add(5800, "10.48.60.11", 1182);
+    //http://roborio-4860-frc.local:5801/
+
+    
     // camera = new UsbCamera("USBCam", 1);
 
     CameraServer.startAutomaticCapture();

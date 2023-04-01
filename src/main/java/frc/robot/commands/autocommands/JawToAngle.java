@@ -59,6 +59,6 @@ public class JawToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(angle - jaw.getJawAngle()) <= 2);
+    return (Math.abs(angle - jaw.getJawAngle()) <= 5);
   }
 }

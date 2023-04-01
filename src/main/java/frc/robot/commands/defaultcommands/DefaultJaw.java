@@ -61,7 +61,7 @@ public class DefaultJaw extends CommandBase {
       currentAngle = jaw.getJawAngle();
       jaw.jawOpen();
     }
-    else if(jawClose.getAsBoolean() && !tongue.isLicked()) {
+    else if(jawClose.getAsBoolean()) {
       currentAngle = jaw.getJawAngle();
       jaw.jawClose();
     }
