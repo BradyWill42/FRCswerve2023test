@@ -79,11 +79,10 @@ public class BarrierThreePiece extends SequentialCommandGroup {
         HashMap<String, Command> eventMap = new HashMap<String, Command>();
         eventMap.put("RetractNeck", new NeckToLength(neck, Constants.Snake.retractedLength));
         eventMap.put("LowerJaw", new JawToAngle(jaw, neck, Constants.Snake.downAngle));
-
         eventMap.put("OpenGrabber", new Grab(grabber, false, true));
         eventMap.put("GrabCone", new Grab(grabber, true, true));
-        eventMap.put("OpenJaw", new JawToAngle(jaw, neck, Constants.Snake.midAngle));
-        // eventMap.put("ExtendNeck", new NeckToLength(neck, Constants.Snake.highLength));
+        eventMap.put("OpenJaw", new JawToAngle(jaw, neck, Constants.Snake.highConeAngle));
+        eventMap.put("ExtendNeck", new NeckToLength(neck, Constants.Snake.highLength));
 
         
         FollowPathWithEvents fullPath = new FollowPathWithEvents(
@@ -113,14 +112,14 @@ public class BarrierThreePiece extends SequentialCommandGroup {
 
             new Grab(grabber, true, true),
 
-            fullPath
+            fullPath,
 
-            // new ParallelRaceGroup(
-            //     new LimelightAlign(jaw, neck, swerve, PoleHeight.HIGH_POLE),
-            //     new WaitCommand(1)
-            // ),
+            new ParallelRaceGroup(
+                new LimelightAlign(jaw, neck, swerve, PoleHeight.HIGH_POLE),
+                new WaitCommand(2)
+            ),
 
-            // new Grab(grabber, false, true)
+            new Grab(grabber, false, true)
 
         );
 

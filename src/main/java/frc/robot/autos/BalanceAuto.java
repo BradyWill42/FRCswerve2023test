@@ -40,19 +40,11 @@ public class BalanceAuto extends SequentialCommandGroup{
 
         addRequirements(swerve, jaw, tongue, neck, grabber);
 
-        // PathPlannerTrajectory gFCR = PathPlanner.loadPath("grabFirstConeReverseL", new PathConstraints(4.5, 5));
-        // PathPlannerTrajectory.transformTrajectoryForAlliance(gFCR, DriverStation.getAlliance());
-        // Command grabFirstConeReverse = swerve.followTrajectoryCommand(gFCR);
-        // PathPlannerTrajectory.transformTrajectoryForAlliance(gFCS, DriverStation.getAlliance());
-
-
         PathPlannerTrajectory balanceAuto = PathPlanner.loadPath("BalanceRobot", new PathConstraints(4, 4));
         PathPlannerTrajectory.transformTrajectoryForAlliance(balanceAuto, DriverStation.getAlliance());
-        // PathPlannerTrajectory gFCS = PathPlanner.loadPath("barrierSide" + DriverStation.getAlliance().toString(), new PathConstraints(4, 4));
         Command setUpBalance = swerve.followTrajectoryCommand(balanceAuto);
 
         SmartDashboard.putString("Drive Station Color", DriverStation.getAlliance().toString());
-
 
         // This is just an example event map. It would be better to have a constant, global event map
         // in your code that will be used by all path following commands.
@@ -67,7 +59,7 @@ public class BalanceAuto extends SequentialCommandGroup{
             eventMap
         );
 
-
+        
         
         addCommands(
 
