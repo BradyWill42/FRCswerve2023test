@@ -2,7 +2,13 @@ package frc.robot.commands.autocommands;
 
 import java.lang.invoke.ConstantCallSite;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,9 +94,16 @@ public class LimelightAlign extends CommandBase{
     SmartDashboard.putNumber("distanceFromTarget", distanceFromTarget);
     SmartDashboard.putNumber("strafeOffset", strafeOffset);
 
+    // PathPlannerTrajectory AlignToScore = PathPlanner.generatePath(
+    //   new PathConstraints(4.0, 4.0),
+    //   new PathPoint(swerve.get, Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
+    //   new PathPoint(new Translation2d(distanceFromTarget, strafeOffset), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
+    //   );
+
+    // swerve.followTrajectoryCommand(AlignToScore);
+
     if(Limelight.isTarget()){
-      swerve.drive(new Translation2d(distanceFromTarget, strafeOffset).times(2.0), 0, true, true);
-      
+      swerve.driveStraight(new Translation2d(distanceFromTarget, strafeOffset).times(2.0), 0, true, true);
     }   
 
   }
@@ -98,7 +111,7 @@ public class LimelightAlign extends CommandBase{
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // Limelight.setLedMode(LightMode.eOff);
+    Limelight.setLedMode(LightMode.eOff);
   }
 
 

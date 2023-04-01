@@ -186,7 +186,7 @@ public final class Constants {
         public static final double downAngle = 0.0;
         public static final double autoAngle = 45.0;
         public static final double midAngle = 45.0;
-        public static final double highConeAngle = 45.0;
+        public static final double highConeAngle = 48.0;
         public static final double highBlockAngle = 45.0;
         public static final double midLength = 1.25;
         public static final double highLength = 1.6;

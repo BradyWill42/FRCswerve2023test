@@ -110,7 +110,7 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         Limelight.setPipeline(0);
-        Limelight.setLedMode(LightMode.eOn);
+        Limelight.setLedMode(LightMode.eOff);
         Limelight.setCameraMode(CameraMode.eVision);
         
         if(translationAxis < Math.abs(0.1)){
@@ -243,10 +243,6 @@ public class RobotContainer {
 
         chooser.addOption("Balance Auto", new BalanceAuto(swerve, jaw, tongue, neck, grabber));
 
-        chooser.addOption("Score from Barrier Side", new BarrierSideAuto(swerve, jaw, tongue, neck, grabber));
-
-        chooser.addOption("Score from Wall Side", new WallSideAuto(swerve, jaw, tongue, neck, grabber));
-
         chooser.addOption("Set Arm to 65 Degrees", new JawToAngle(jaw, neck, 65));
 
         chooser.addOption("Lick Test", new LickAuto(tongue, grabber, jaw, neck));
@@ -255,7 +251,6 @@ public class RobotContainer {
 
         chooser.addOption("Barrier ThreePieceAuto", new BarrierThreePiece(swerve, jaw, tongue, neck, grabber));
 
-        // chooser.addOption("Score from Right Side", getAutonomousCommand());
         SmartDashboard.putData(chooser);
     }
 
